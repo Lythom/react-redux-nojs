@@ -1,0 +1,1 @@
+document.getElementById('root').innerHTML = "I'm server rendered ! with dynamic interactions !"

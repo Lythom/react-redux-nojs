@@ -1,0 +1,15 @@
+{
+  "scripts": {
+    "start" : "node %NODE_DEBUG_OPTION% src/server.js"
+  },
+  "name": "react-redux-ssr",
+  "version": "1.0.0",
+  "description": "Demo project to showcase react redux and server side rendering \"no-js\" capabilities",
+  "main": "index.js",
+  "repository": "https://github.com/Lythom/react-redux-nojs.git",
+  "author": "Samuel Bouchet",
+  "license": "MIT",
+  "dependencies": {
+    "express": "^4.15.2"
+  }
+}
