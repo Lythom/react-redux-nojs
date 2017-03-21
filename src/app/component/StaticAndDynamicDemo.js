@@ -1,20 +1,32 @@
-const React = require('react')
+import React from 'react'
 
-module.exports = React.createClass({
+export default React.createClass({
+
+  displayName: 'StaticAndDynamicDemo',
 
   getInitialState() {
     return {
-      dynamic: 'static'
+      dynamic : 'static',
+      count   : 0,
     }
   },
 
   componentDidMount() {
     this.setState({
-      dynamic: 'dynamic'
+      dynamic : 'dynamic'
     })
+    this.interval = setInterval(() => {
+      this.setState({
+        count : this.state.count + 1
+      })
+    }, 1000)
+  },
+
+  componentWillUnmount() {
+    clearInterval(this.interval)
   },
 
   render() {
-    return React.createElement('div', null, `I'm server rendered with react ! with ${this.state.dynamic} interactions !`)
+    return <div>I'm server rendered with react. Counting: {this.state.count} (test reload number : 25) ! with {this.state.dynamic} interactions !</div>
   }
 })

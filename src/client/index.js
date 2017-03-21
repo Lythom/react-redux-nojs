@@ -1,9 +1,18 @@
 import React from 'react'
 import ReactDOM from 'react-dom'
 
-import StaticAndDynamicDemo from 'app/component/StaticAndDynamicDemo'
+import App from 'app/App'
+import { AppContainer } from 'react-hot-loader'
 
-ReactDOM.render(
-  React.createElement(StaticAndDynamicDemo),
-  document.getElementById('root')
-)
+const rootNode = document.getElementById('root')
+const render = (Component) => {
+  ReactDOM.render(<AppContainer><Component /></AppContainer>, rootNode)
+}
+
+render(App)
+
+if (module.hot) {
+  module.hot.accept('app/App', () => {
+    render(require('app/App').default)
+  })
+}

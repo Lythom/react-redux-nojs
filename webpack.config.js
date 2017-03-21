@@ -1,19 +1,22 @@
-/*
- ./webpack.config.js
- */
 const path = require('path');
+
 module.exports = {
-  resolve: {
-    modules: [path.resolve(__dirname, "src"), "node_modules"]
+  resolve : {
+    modules : [path.resolve(__dirname, "src"), "node_modules"]
   },
-  entry: 'client/index.js',
-  output: {
-    path: path.resolve('dist'),
-    filename: 'index_bundle.js'
+  entry   : [
+    'client/index.js',
+  ],
+  output  : {
+    path       : path.resolve('dist'),
+    filename   : 'bundle.js',
+    publicPath : '/assets/',
   },
-  module: {
-    loaders: [
-      { test: /\.js$/, loader: 'babel-loader', exclude: /node_modules/ },
+  devtool: 'source-map',
+  plugins: [],
+  module  : {
+    loaders : [
+      { test : /\.js$/, loader : ['babel-loader'],  include: path.join(__dirname, 'src') },
     ]
   }
 }

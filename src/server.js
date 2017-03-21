@@ -4,20 +4,27 @@ const ReactDOMServer = require('react-dom/server')
 const React = require('react')
 
 // app imports
-const StaticAndDynamicDemo = require('./app/component/StaticAndDynamicDemo')
+const App = require('app/App').default
 
 // server init
 const app = express();
 
-/**
- * Express configuration
- */
-app.use('/assets', express.static(__dirname + '/../dist/'))
+if (process.env.NODE_ENV === 'production') {
+  // serving bundle from "dist" in production
+  console.log('Serving assets from ' + (__dirname + '/../dist/'))
+  app.use('/assets', express.static(__dirname + '/../dist/'))
 
+} else {
+  // serving bundle from webpack in development
+  console.log('Serving assets from webpack development middleware with hot reload.')
+  attachWebpackDevMiddlware(app, require("../webpack.config.js"))
+}
+
+// response handling
 app.get('*', function(req, res) {
 
   const title = 'First title'
-  const prerenderedApp = ReactDOMServer.renderToString(React.createElement(StaticAndDynamicDemo))
+  const prerenderedApp = ReactDOMServer.renderToString(React.createElement(App))
 
   const template = `
 <!DOCTYPE html>
@@ -26,8 +33,8 @@ app.get('*', function(req, res) {
     <title>${title}</title>
   </head>
   <body>
-    <div id="root">${prerenderedApp}</div> 
-    <script src="assets/index_bundle.js"></script>
+    <div id="root">${prerenderedApp}</div>
+    <script src="assets/bundle.js" type="text/javascript"></script>
   </body>
 </html>
 `
@@ -45,3 +52,28 @@ const server = app.listen(3000, 'localhost', function(err) {
   }
   console.log('Listening at http://localhost:%d', server.address().port);
 });
+
+/**
+ * add the webpack-dev-middleware to an express app.
+ * @param app
+ * @param webpackConfig
+ */
+function attachWebpackDevMiddlware(app, webpackConfig) {
+  // serving bundle using webpack in development
+  const webpackDevMiddleware = require("webpack-dev-middleware");
+  const webpackHotMiddleware = require('webpack-hot-middleware');
+  const webpack = require("webpack");
+
+  const config = Object.assign({}, webpackConfig);
+  config.entry.unshift('react-hot-loader/patch');
+  config.entry.unshift('webpack-hot-middleware/client?reload=true');
+  config.plugins.push(new webpack.HotModuleReplacementPlugin());
+  config.plugins.push(new webpack.NamedModulesPlugin());
+  config.plugins.push(new webpack.NoEmitOnErrorsPlugin());
+
+  const compiler = webpack(config);
+  app.use(webpackDevMiddleware(compiler, {
+    publicPath       : config.output.publicPath,
+  }));
+  app.use(webpackHotMiddleware(compiler));
+}
