@@ -12,7 +12,7 @@ const app = express();
 /**
  * Express configuration
  */
-app.use('/index.js', express.static(__dirname + '/client/index.js'))
+app.use('/assets', express.static(__dirname + '/../dist/'))
 
 app.get('*', function(req, res) {
 
@@ -24,12 +24,10 @@ app.get('*', function(req, res) {
 <html>
   <head>
     <title>${title}</title>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/react/15.4.2/react.min.js" />
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/react/15.4.2/react-dom.min.js" />
   </head>
   <body>
     <div id="root">${prerenderedApp}</div> 
-    <script src="index.js"></script>
+    <script src="assets/index_bundle.js"></script>
   </body>
 </html>
 `
