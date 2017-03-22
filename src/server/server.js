@@ -2,6 +2,8 @@
 const express = require('express');
 const ReactDOMServer = require('react-dom/server')
 const React = require('react')
+import { StaticRouter } from 'react-router';
+
 
 // app imports
 const App = require('app/App').default
@@ -24,7 +26,20 @@ if (process.env.NODE_ENV === 'production') {
 app.get('*', function(req, res) {
 
   const title = 'First title'
-  const prerenderedApp = ReactDOMServer.renderToString(React.createElement(App))
+  const context = {}
+  const prerenderedApp = ReactDOMServer.renderToString(
+    <StaticRouter location={req.url} context={context}>
+      <App />
+    </StaticRouter>
+  )
+
+  if (context.url) {
+    res.writeHead(302, {
+      Location: context.url
+    })
+    res.end()
+    return
+  }
 
   const template = `
 <!DOCTYPE html>
