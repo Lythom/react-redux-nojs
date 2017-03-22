@@ -2,11 +2,12 @@
 const express = require('express');
 const ReactDOMServer = require('react-dom/server')
 const React = require('react')
-import { StaticRouter } from 'react-router';
-
 
 // app imports
+const { Provider } = require('react-redux')
+const { StaticRouter } = require('react-router');
 const App = require('app/App').default
+const createInitialStore = require('app/createInitialStore').default
 
 // server init
 const app = express();
@@ -25,13 +26,21 @@ if (process.env.NODE_ENV === 'production') {
 // response handling
 app.get('*', function(req, res) {
 
+  // new state
+  const store = createInitialStore()
+
   const title = 'First title'
   const context = {}
   const prerenderedApp = ReactDOMServer.renderToString(
-    <StaticRouter location={req.url} context={context}>
-      <App />
-    </StaticRouter>
+    <Provider store={store}>
+      <StaticRouter location={req.url} context={context}>
+        <App />
+      </StaticRouter>
+    </Provider>
   )
+
+  // state. replace "<" with JS char to prevent script injection in the generated string.
+  const prerenderedState = JSON.stringify(store.getState()).replace(/</g, '\\u003c')
 
   if (context.url) {
     res.writeHead(302, {
@@ -50,6 +59,7 @@ app.get('*', function(req, res) {
   <body>
     <div id="root">${prerenderedApp}</div>
     <script src="assets/bundle.js" type="text/javascript"></script>
+    <script>window.__PRELOADED_STATE__ = ${prerenderedState}</script>
   </body>
 </html>
 `

@@ -1,13 +1,14 @@
 import React from 'react'
+import { connect } from 'react-redux'
+import * as counter from 'app/reducers/counter'
 
-export default React.createClass({
+const StaticAndDynamicDemo = React.createClass({
 
   displayName: 'StaticAndDynamicDemo',
 
   getInitialState() {
     return {
       dynamic : 'static',
-      count   : 0,
     }
   },
 
@@ -15,11 +16,7 @@ export default React.createClass({
     this.setState({
       dynamic : 'dynamic'
     })
-    this.interval = setInterval(() => {
-      this.setState({
-        count : this.state.count + 1
-      })
-    }, 1000)
+    this.interval = setInterval(() => this.props.inc(), 1000)
   },
 
   componentWillUnmount() {
@@ -27,6 +24,19 @@ export default React.createClass({
   },
 
   render() {
-    return <div>I'm server rendered with react. Counting: {this.state.count} (test reload number : 25) ! with {this.state.dynamic} interactions !</div>
+    return <div>I'm server rendered with react. Counting: {this.props.count} (test reload number : 37) ! with {this.state.dynamic} interactions !</div>
   }
 })
+
+function mapStateToProps(state) {
+  return {
+    count: counter.selectors.getCount(state.counter)
+  }
+}
+function mapDispatchToProps(dispatch) {
+  return {
+    inc: () => dispatch(counter.actions.increment())
+  }
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(StaticAndDynamicDemo)
