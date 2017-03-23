@@ -1,0 +1,10 @@
+.d-ibl {
+  display: inline-block;
+}
+
+.g-10 {
+  margin-right: 10px;
+  &:last-child {
+    margin-right: 0px;
+  }
+}

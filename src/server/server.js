@@ -12,16 +12,15 @@ const createInitialStore = require('app/createInitialStore').default
 // server init
 const app = express();
 
-if (process.env.NODE_ENV === 'production') {
-  // serving bundle from "dist" in production
-  console.log('Serving assets from ' + (__dirname + '/../../dist/'))
-  app.use('/assets', express.static(__dirname + '/../../dist/'))
-
-} else {
+if (process.env.NODE_ENV === 'development') {
   // serving bundle from webpack in development
   console.log('Serving assets from webpack development middleware with hot reload.')
   attachWebpackDevMiddlware(app, require("../../webpack.config.js"))
 }
+// serving bundle et css from "dist" in production
+// serving css from "dist" in development as well
+console.log('Serving assets from ' + (__dirname + '/../../dist/'))
+app.use('/assets', express.static(__dirname + '/../../dist/'))
 
 // response handling
 app.get('*', function(req, res) {
@@ -44,7 +43,7 @@ app.get('*', function(req, res) {
 
   if (context.url) {
     res.writeHead(302, {
-      Location: context.url
+      Location : context.url
     })
     res.end()
     return
@@ -55,11 +54,14 @@ app.get('*', function(req, res) {
 <html>
   <head>
     <title>${title}</title>
+    <link rel="stylesheet" type="text/css" href="assets/normalize.css" />
+    <link rel="stylesheet" type="text/css" href="assets/styles.css" />
   </head>
   <body>
     <div id="root">${prerenderedApp}</div>
     <script src="assets/bundle.js" type="text/javascript"></script>
     <script>window.__PRELOADED_STATE__ = ${prerenderedState}</script>
+    ${process.env.NODE_ENV !== 'development' ? '' : `<script>document.write('<script src="http://' + (location.host || 'localhost').split(':')[0] + ':35729/livereload.js?snipver=1"></' + 'script>')</script>`}
   </body>
 </html>
 `
@@ -98,7 +100,7 @@ function attachWebpackDevMiddlware(app, webpackConfig) {
 
   const compiler = webpack(config);
   app.use(webpackDevMiddleware(compiler, {
-    publicPath       : config.output.publicPath,
+    publicPath : config.output.publicPath,
   }));
   app.use(webpackHotMiddleware(compiler));
 }
