@@ -1,21 +1,13 @@
 import React from 'react'
 import { connect } from 'react-redux'
 import * as counter from 'app/reducers/counter'
+import * as interactions from 'app/reducers/interactions'
 
 const StaticAndDynamicDemo = React.createClass({
 
   displayName: 'StaticAndDynamicDemo',
 
-  getInitialState() {
-    return {
-      dynamic : 'static',
-    }
-  },
-
   componentDidMount() {
-    this.setState({
-      dynamic : 'dynamic'
-    })
     this.interval = setInterval(() => this.props.inc(), 1000)
   },
 
@@ -24,13 +16,17 @@ const StaticAndDynamicDemo = React.createClass({
   },
 
   render() {
-    return <div>I'm server rendered with react. Counting: {this.props.count} (test reload number : 37) ! with {this.state.dynamic} interactions !</div>
+    const intro = 'I\'m server rendered with react'
+    if (this.props.isStatic) return <div>{intro}. Service is currently down, try again later !</div>
+    return <div>{intro}. Counting: {this.props.count} (test reload number : 38) ! with {this.props.interactions} interactions !</div>
   }
 })
 
 function mapStateToProps(state) {
   return {
-    count: counter.selectors.getCount(state.counter)
+    count: counter.selectors.getCount(state.counter),
+    isStatic: interactions.selectors.isStatic(state.interactions),
+    interactions: interactions.selectors.getInteractions(state.interactions)
   }
 }
 function mapDispatchToProps(dispatch) {

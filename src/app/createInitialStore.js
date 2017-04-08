@@ -1,8 +1,8 @@
 import { createStore } from 'redux'
-import counter from 'app/reducers/index'
+import rootReducer from 'app/reducers/index'
 
 export default (initialState) => {
-  const store = createStore(counter, initialState)
+  const store = createStore(rootReducer, initialState)
 
   if(module.hot) {
     module.hot.accept('app/reducers/index', () =>

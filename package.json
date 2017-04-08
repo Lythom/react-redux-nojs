@@ -1,13 +1,23 @@
 {
   "scripts": {
     "start": "cross-env NODE_ENV=production NODE_PATH=src/ node src/server/index.js",
-    "dev": "npm-run-all --parallel dev:* build:css",
+
+    "dev": "npm-run-all --parallel dev:* build:css build:cssvendors",
     "dev:start": "cross-env NODE_ENV=development NODE_PATH=src/ node src/server/index.js",
     "dev:css": "node-sass -w src/app/styles/ -o dist/",
     "dev:livereload": "livereload dist",
+
     "build": "npm-run-all build:*",
     "build:css": "node-sass src/app/styles/ -o dist/",
+    "build:cssvendors": "node-sass node_modules/normalize.css/normalize.css -o dist/",
     "build:bundle": "webpack",
+
+    "serve-static": "http-server dist-static -p 3001",
+    "build-static": "npm-run-all build-static:*",
+    "build-static:css": "node-sass src/app/styles/ -o dist-static/assets",
+    "build-static:cssvendors": "node-sass node_modules/normalize.css/normalize.css -o dist-static/assets",
+    "build-static:bundle": "webpack --config webpack.static.config.js",
+
     "debug:start": "cross-env NODE_ENV=development NODE_PATH=src/ node %NODE_DEBUG_OPTION% src/server/index.js"
   },
   "name": "react-redux-ssr",
@@ -33,11 +43,13 @@
     "babel-preset-react": "^6.23.0",
     "cross-env": "^3.2.4",
     "express": "^4.15.2",
+    "http-server": "^0.9.0",
     "livereload": "^0.6.2",
     "node-sass": "^4.5.1",
     "npm-run-all": "^4.0.2",
     "path": "^0.12.7",
     "react-hot-loader": "next",
+    "static-site-generator-webpack-plugin": "^3.4.1",
     "webpack": "^2.2.1",
     "webpack-dev-middleware": "^1.10.1",
     "webpack-hot-middleware": "^2.17.1"

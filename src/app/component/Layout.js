@@ -4,8 +4,8 @@ import Menu, {MenuItem} from 'app/component/Menu'
 const Layout = ({children}) => (
   <div>
     <Menu>
-      <MenuItem to="/">Home</MenuItem>
-      <MenuItem to="/demo">Demo Counter</MenuItem>
+      <MenuItem to="/index.html">Home</MenuItem>
+      <MenuItem to="/demo.html">Demo Counter</MenuItem>
     </Menu>
     <hr />
     {children}

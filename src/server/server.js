@@ -1,13 +1,8 @@
-// server imports
-const express = require('express');
-const ReactDOMServer = require('react-dom/server')
-const React = require('react')
+import express from 'express'
 
-// app imports
-const { Provider } = require('react-redux')
-const { StaticRouter } = require('react-router');
-const App = require('app/App').default
-const createInitialStore = require('app/createInitialStore').default
+import createAppRenderer from './createAppRenderer'
+import createInitialStore from 'app/createInitialStore'
+import * as interactions from 'app/reducers/interactions'
 
 // server init
 const app = express();
@@ -24,22 +19,13 @@ app.use('/assets', express.static(__dirname + '/../../dist/'))
 
 // response handling
 app.get('*', function(req, res) {
-
-  // new state
-  const store = createInitialStore()
-
-  const title = 'First title'
   const context = {}
-  const prerenderedApp = ReactDOMServer.renderToString(
-    <Provider store={store}>
-      <StaticRouter location={req.url} context={context}>
-        <App />
-      </StaticRouter>
-    </Provider>
-  )
 
-  // state. replace "<" with JS char to prevent script injection in the generated string.
-  const prerenderedState = JSON.stringify(store.getState()).replace(/</g, '\\u003c')
+  const store = createInitialStore()
+  store.dispatch(interactions.actions.setServer())
+  // initial actions can be dispatch here
+  // eventually place the rest of the function in a Promise.then if some actions are thunks.
+  const render = createAppRenderer(req.url, store, context)
 
   if (context.url) {
     res.writeHead(302, {
@@ -49,24 +35,8 @@ app.get('*', function(req, res) {
     return
   }
 
-  const template = `
-<!DOCTYPE html>
-<html>
-  <head>
-    <title>${title}</title>
-    <link rel="stylesheet" type="text/css" href="assets/normalize.css" />
-    <link rel="stylesheet" type="text/css" href="assets/styles.css" />
-  </head>
-  <body>
-    <div id="root">${prerenderedApp}</div>
-    <script src="assets/bundle.js" type="text/javascript"></script>
-    <script>window.__PRELOADED_STATE__ = ${prerenderedState}</script>
-    ${process.env.NODE_ENV !== 'development' ? '' : `<script>document.write('<script src="http://' + (location.host || 'localhost').split(':')[0] + ':35729/livereload.js?snipver=1"></' + 'script>')</script>`}
-  </body>
-</html>
-`
-
-  res.send(template)
+  const html = render()
+  res.send(html)
 });
 
 /**
