@@ -1,10 +1,39 @@
 # react-redux-nojs
 
+## Why you need universal app (Server side rendering)
+
+Universal ? Execute the same js in different environments :
+* On any js compatible client browser
+* In any nodejs script
+  * Ex: On a dynamic server
+  * Ex: In a static generation script
+* In any test suite
+
+### Usually mentionned
+
+* SEO
+* Performances (initial display earlier because the page arrive prerendered)
+
+### Why you really want it
+
+* Inclusiveness
+  * Older browers (ie6, ie7, ie8, olders android, windows phones)
+  * People that disable js on purpose
+  * Accessibility
+  * Robots that can perform actions for people (assistance, delegated use, tests)
+* Resilience
+  * Support server overload / fails by serving a static prerendered (from CDN, ngix, etc.)
+  * Support client fail (inclusiveness, client app js error)
+  * Both fails = still a static page that indicate that interactions are currently unavailable.
+  * Best experience is top-notch
+  * Worst experience is decent
+
 ## Objectives :
 
 * Build chain as a dependency
 * Server side rendering
 * Bleeding edge dev experience (hot reload, eslint, tests, import ressources as modules, ES6, JSX)
+* "Full" SSR
 
 ## Tried
 
@@ -220,7 +249,7 @@ npm install --save redux react-redux
     * Root reducer not required yet but the app WILL scale. 
         * Otherwise don't use redux.
     * Easier refactoring
-* CreateInitialStore to build the store. Isomorphic for the moment so same file for client and server.
+* CreateInitialStore to build the store. Universal for the moment so same file for client and server.
 * Client side : Use Provider with initialized store from server
 * Server side : Generate an initial state and pass it to client
 
@@ -242,7 +271,7 @@ But :
 
 ### Vanilla JS
 
-* Well known (Anyone that knows CSS can work with without overhead)
+* Well known (Anyone that knows CSS can work without overhead)
 * Ultra simple (include stylesheet, use class)
 * Dev experience (gulp watcher + compiler + live reload is a long time standard)
 
@@ -255,7 +284,7 @@ But :
 
 So ?
 * No perfect solution
-* I'll go with some Atomic design
+* I'll go with Atomic design
   * Reusable
   * Easy to read (and to adopt for incoming developpers)
   * Easy style guide (you can copy paste any atom / molecule and it will render correctly anywhere)
@@ -275,9 +304,28 @@ So ?
 * npm scripts ftw
 * Css delivery + livereload (dev only) on the server
 
-## 8. Getting serious
+## Static generation
 
-TODO : fix previous commit of redux to include staticAndDynamicDemo.js
+This will allow server failure resilience, by serving an alternative static only version.
+
+> @008e2e3 - Add static html files generation
+
+```npm i -- save-dev static-site-generator-webpack-plugin http-server```
+
+* Create a new store "interactions" that tell the app if the current rendering is :
+  * static : no interactions are possible
+  * server : interactions are possible via server request
+  * dynamic : interactions are possible client-side with JavaScript
+* Renames pages as "html" for transparent transition with static rendering
+* Refactor server to extract render to string function
+* Render statics using webpack
+  * config webpack.static.config.js via static-site-generator-webpack-plugin
+  * in server/static.js reuse the render to string
+* Add entries in package.json scripts to build and serve statics
+* Fix a Redux + React-Router trick in App.js
+  
+
+## 8. Getting serious
 
 ### server side counter
 
