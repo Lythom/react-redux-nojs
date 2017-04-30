@@ -11,13 +11,13 @@ const app = express();
 
 if (process.env.NODE_ENV === 'production') {
   // serving bundle from "dist" in production
-  console.log('Serving assets from ' + (__dirname + '/../dist/'))
-  app.use('/assets', express.static(__dirname + '/../dist/'))
+  console.log('Serving assets from ' + (__dirname + '/../../dist/'))
+  app.use('/assets', express.static(__dirname + '/../../dist/'))
 
 } else {
   // serving bundle from webpack in development
   console.log('Serving assets from webpack development middleware with hot reload.')
-  attachWebpackDevMiddlware(app, require("../webpack.config.js"))
+  attachWebpackDevMiddlware(app, require("../../webpack.config.js"))
 }
 
 // response handling
