@@ -27,6 +27,8 @@ export default (url, store = undefined, context = {}) => function render() {
     <title>${title}</title>
     <link rel="stylesheet" type="text/css" href="assets/normalize.css" />
     <link rel="stylesheet" type="text/css" href="assets/styles.css" />
+    <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon">
+    <link rel="icon" href="/favicon.ico" type="image/x-icon"> 
   </head>
   <body>
     <div id="root">${prerenderedApp}</div>

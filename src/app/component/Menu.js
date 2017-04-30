@@ -8,5 +8,5 @@ const Menu = ({ children }) => (
 export default Menu
 
 export const MenuItem = ({ children, to }) => (
-  <li className="d-ibl g-10"><Link to={to}>{children}</Link></li>
+  <li className="d-ib g-10"><Link to={to}>{children}</Link></li>
 )

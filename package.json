@@ -2,7 +2,7 @@
   "scripts": {
     "start": "cross-env NODE_ENV=production NODE_PATH=src/ node src/server/index.js",
 
-    "dev": "npm-run-all --parallel dev:* build:css build:cssvendors",
+    "dev": "npm-run-all --parallel dev:* build:css build:cssvendors build:copyassets",
     "dev:start": "cross-env NODE_ENV=development NODE_PATH=src/ node src/server/index.js",
     "dev:css": "node-sass -w src/app/styles/ -o dist/",
     "dev:livereload": "livereload dist",
@@ -10,12 +10,14 @@
     "build": "npm-run-all build:*",
     "build:css": "node-sass src/app/styles/ -o dist/",
     "build:cssvendors": "node-sass node_modules/normalize.css/normalize.css -o dist/",
+    "build:copyassets": "shx cp src/app/assets/* dist/",
     "build:bundle": "webpack",
 
     "serve-static": "http-server dist-static -p 3001",
     "build-static": "npm-run-all build-static:*",
     "build-static:css": "node-sass src/app/styles/ -o dist-static/assets",
     "build-static:cssvendors": "node-sass node_modules/normalize.css/normalize.css -o dist-static/assets",
+    "build-static:copyassets": "shx cp src/app/assets/* dist-static/",
     "build-static:bundle": "webpack --config webpack.static.config.js",
 
     "debug:start": "cross-env NODE_ENV=development NODE_PATH=src/ node %NODE_DEBUG_OPTION% src/server/index.js"
@@ -49,6 +51,8 @@
     "npm-run-all": "^4.0.2",
     "path": "^0.12.7",
     "react-hot-loader": "next",
+    "serve-favicon": "^2.4.2",
+    "shx": "^0.2.2",
     "static-site-generator-webpack-plugin": "^3.4.1",
     "webpack": "^2.2.1",
     "webpack-dev-middleware": "^1.10.1",

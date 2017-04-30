@@ -1,4 +1,5 @@
 import express from 'express'
+import favicon from 'serve-favicon'
 
 import createAppRenderer from './createAppRenderer'
 import createInitialStore from 'app/createInitialStore'
@@ -6,6 +7,8 @@ import * as interactions from 'app/reducers/interactions'
 
 // server init
 const app = express();
+
+app.use(favicon(__dirname + '/../../dist/favicon.ico'))
 
 if (process.env.NODE_ENV === 'development') {
   // serving bundle from webpack in development

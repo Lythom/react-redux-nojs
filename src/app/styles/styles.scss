@@ -1,5 +1,16 @@
-.d-ibl {
+$h-spacing: 1rem;
+$v-spacing: 1.5rem;
+
+.d-ib {
   display: inline-block;
+}
+
+.fl-l {
+  float: left;
+}
+
+.mr-1 {
+  margin: $h-spacing;
 }
 
 .g-10 {
