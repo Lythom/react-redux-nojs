@@ -1,18 +1,21 @@
-export default function counter(state = 0, action) {
+export default function counter(state = -1, action) {
   switch (action.type) {
-    case 'INCREMENT':
-      return state + 1
+    case 'INIT_COUNTER':
+      return action.payload
     default:
       return state
   }
 }
 
 export const actions = {
-  increment : () => ({type: 'INCREMENT'})
+  initCounterStart : () => ({type: 'INIT_COUNTER', payload: Date.now()})
 }
 
 export const selectors = {
-  getCount(state) {
+  getCounterStart(state) {
     return state
+  },
+  isInitialized(state) {
+    return state !== -1
   }
 }

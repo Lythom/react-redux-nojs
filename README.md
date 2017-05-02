@@ -329,6 +329,11 @@ This will allow server failure resilience, by serving an alternative static only
 
 ### server side counter
 
+* count from the first time the component is displayed (page loaded)
+=> Use a starttime instead of an incremental counter
+=> save the starttime in a server session
+=> Track the session of the user 
+
 ### server side openstreetmap and google-map
 
 ### server side form

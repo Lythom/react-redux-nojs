@@ -17,6 +17,9 @@ export const selectors = {
   isStatic(state) {
     return state === 'static'
   },
+  isServer(state) {
+    return state === 'server'
+  },
   getInteractions(state) {
     return state
   }
