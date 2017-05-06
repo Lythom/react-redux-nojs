@@ -313,28 +313,44 @@ This will allow server failure resilience, by serving an alternative static only
 ```npm i -- save-dev static-site-generator-webpack-plugin http-server```
 
 * Create a new store "interactions" that tell the app if the current rendering is :
-  * static : no interactions are possible
-  * server : interactions are possible via server request
-  * dynamic : interactions are possible client-side with JavaScript
-* Renames pages as "html" for transparent transition with static rendering
-* Refactor server to extract render to string function
-* Render statics using webpack
-  * config webpack.static.config.js via static-site-generator-webpack-plugin
-  * in server/static.js reuse the render to string
-* Add entries in package.json scripts to build and serve statics
-* Fix a Redux + React-Router trick in App.js
+  * static : no interactions are possible,
+  * server : interactions are possible via server request,
+  * dynamic : interactions are possible client-side with JavaScript.
+* Renames pages as "html" for transparent transition with static rendering.
+* Refactor server to extract render to string function.
+* Render statics using webpack.
+  * Config is in webpack.static.config.js via static-site-generator-webpack-plugin.
+  * Reuse render to string in server/static.js.
+* Add entries in package.json scripts to build and serve statics.
+* Fix a Redux + React-Router trick in App.js.
   
 
 ## 8. Getting serious
 
 ### server side counter
 
-* count from the first time the component is displayed (page loaded)
-=> Use a starttime instead of an incremental counter
-=> save the starttime in a server session
-=> Track the session of the user 
+> 73c2379 - Add server interactions to counter component : server basic session handling via https.
+
+```
+npm install --save shortid
+npm install --save-dev cookie-parser
+```
+
+* Implement a cookie session mechanic server-side to track the data over requests.
+  * Use express cookie-parser to read cookies.
+  * Generate a cookie using shortid.
+  * Implement an archaic in-memory session to persist data over the session.
+* Use https protocol to secure the cookie id and prevent thief of credential or data,
+  * with private key + self-signed cert for local tests.
+* Count from the first time the server is requested during this session.
+  * Use a starttime instead of an incremental counter.
+  * Calculate the difference between now and the starttime to display counter.
+  * The startime is created with the session initialisation and is not updated then.
 
 ### server side openstreetmap and google-map
+
+http://openlayers.org/en/latest/doc/quickstart.html
+umap.openstreetmap.fr/fr/map/mes-lieux-preferes-sur-nantes_143683
 
 ### server side form
 
