@@ -1,5 +1,6 @@
 import React from 'react'
 import ReactDOMServer from 'react-dom/server'
+import { Helmet } from 'react-helmet'
 
 // app imports
 import { Provider } from 'react-redux'
@@ -19,16 +20,18 @@ export default (url, store = undefined, context = {}) => function render() {
 
   // state. replace "<" with JS char to prevent script injection in the generated string.
   const prerenderedState = JSON.stringify(store.getState()).replace(/</g, '\\u003c')
-
+  const helmet = Helmet.renderStatic()
   return `
 <!DOCTYPE html>
 <html>
   <head>
-    <title>${title}</title>
     <link rel="stylesheet" type="text/css" href="assets/normalize.css" />
     <link rel="stylesheet" type="text/css" href="assets/styles.css" />
     <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon">
     <link rel="icon" href="/favicon.ico" type="image/x-icon"> 
+    ${helmet.title.toString()}
+    ${helmet.meta.toString()}
+    ${helmet.link.toString()}
   </head>
   <body>
     <div id="root">${prerenderedApp}</div>

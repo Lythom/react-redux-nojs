@@ -1,5 +1,5 @@
 import React from 'react'
-import Menu, {MenuItem} from 'app/component/Menu'
+import Menu, { MenuItem } from 'app/components/layout/Menu'
 
 const Layout = ({children}) => (
   <div>

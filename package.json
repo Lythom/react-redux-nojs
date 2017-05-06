@@ -1,25 +1,21 @@
 {
   "scripts": {
     "start": "cross-env NODE_ENV=production NODE_PATH=src/ node src/server/index.js",
-
     "dev": "npm-run-all --parallel dev:* build:css build:cssvendors build:copyassets",
     "dev:start": "cross-env NODE_ENV=development NODE_PATH=src/ node src/server/index.js",
     "dev:css": "node-sass -w src/app/styles/ -o dist/",
     "dev:livereload": "livereload dist",
-
     "build": "npm-run-all build:*",
     "build:css": "node-sass src/app/styles/ -o dist/",
     "build:cssvendors": "node-sass node_modules/normalize.css/normalize.css -o dist/",
-    "build:copyassets": "shx cp src/app/assets/* dist/",
+    "build:copyassets": "shx cp -R src/app/assets/* dist/",
     "build:bundle": "webpack",
-
     "serve-static": "http-server dist-static -p 3001",
     "build-static": "npm-run-all build-static:*",
     "build-static:css": "node-sass src/app/styles/ -o dist-static/assets",
     "build-static:cssvendors": "node-sass node_modules/normalize.css/normalize.css -o dist-static/assets",
     "build-static:copyassets": "shx cp src/app/assets/* dist-static/",
     "build-static:bundle": "webpack --config webpack.static.config.js",
-
     "debug:start": "cross-env NODE_ENV=development NODE_PATH=src/ node %NODE_DEBUG_OPTION% src/server/index.js"
   },
   "name": "react-redux-ssr",
@@ -33,6 +29,7 @@
     "normalize.css": "^5.0.0",
     "react": "^15.4.2",
     "react-dom": "^15.4.2",
+    "react-helmet": "^5.0.3",
     "react-redux": "^5.0.3",
     "react-router": "^4.0.0",
     "react-router-dom": "^4.0.0",

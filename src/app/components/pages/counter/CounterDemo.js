@@ -9,9 +9,7 @@ import * as interactions from 'app/reducers/interactions'
  * * Server interactions  : ✔ allowed
  * * Static interactions  : ✘ disabled
  */
-class StaticAndDynamicDemo extends React.PureComponent {
-
-  displayName: 'StaticAndDynamicDemo'
+class CounterDemo extends React.PureComponent {
 
   componentDidMount() {
     this.interval = setInterval(this.forceUpdate.bind(this), 1000)
@@ -27,7 +25,7 @@ class StaticAndDynamicDemo extends React.PureComponent {
 
     const count = this.props.isCounterInitialized ? Math.floor((Date.now() - this.props.counterStart) / 1000) : ''
     return <div>
-      {intro}. Counting: {count} (test reload number : 39) {this.props.hasServerInteractions === true && <Reload />} ! with {this.props.interactions} interactions !
+      {intro}. Counting: {count} (test reload number : 40) {this.props.hasServerInteractions === true && <Reload />} ! with {this.props.interactions} interactions !
     </div>
   }
 }
@@ -42,7 +40,7 @@ function mapStateToProps(state) {
   }
 }
 
-export default connect(mapStateToProps)(StaticAndDynamicDemo)
+export default connect(mapStateToProps)(CounterDemo)
 
 
 /**
