@@ -9,6 +9,7 @@ const Layout = ({children}) => (
     <Menu>
       <MenuItem to="/index.html">Home</MenuItem>
       <MenuItem to="/demo.html">Demo Counter</MenuItem>
+      <MenuItem to="/map.html">Carte géographique</MenuItem>
     </Menu>
     <hr />
     {children}

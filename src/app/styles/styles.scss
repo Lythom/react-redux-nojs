@@ -9,6 +9,10 @@ $v-spacing: 1.5rem;
   float: left;
 }
 
+.m-auto {
+  margin: auto;
+}
+
 .mr-1 {
   margin: $h-spacing;
 }
@@ -18,4 +22,17 @@ $v-spacing: 1.5rem;
   &:last-child {
     margin-right: 0px;
   }
+}
+
+.maw-100p {
+  max-width: 100%;
+}
+
+// specifics
+.col-12 {
+  width: 960px;
+}
+
+.h-24 {
+  height: 24 * $v-spacing;
 }

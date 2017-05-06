@@ -1,0 +1,341 @@
+{
+  "type": "umap",
+  "properties": {
+    "easing": true,
+    "embedControl": null,
+    "editinosmControl": false,
+    "fullscreenControl": null,
+    "locateControl": true,
+    "searchControl": true,
+    "datalayersControl": true,
+    "zoomControl": true,
+    "slideshow": {
+      "active": false
+    },
+    "captionBar": false,
+    "popupTemplate": "Default",
+    "iconClass": "Drop",
+    "color": "DarkRed",
+    "limitBounds": {
+      "west": null,
+      "east": null,
+      "north": null,
+      "south": null
+    },
+    "tilelayer": {
+      "tms": false,
+      "attribution": "Tiles courtesy of [[https://www.jawg.io/|jawgmaps]] - Map data [[http://osm.org/copyright/|&copy; OpenStreetMap contributors]], under ODbL.",
+      "name": "OSM Sunny (jawgmaps)",
+      "url_template": "https://tile.jawg.io/sunny/{z}/{x}/{y}.png?api-key=community",
+      "minZoom": 0,
+      "maxZoom": 18
+    },
+    "licence": "",
+    "description": "Démonstration d'un composant OpenStreetMap",
+    "name": "Mes lieux préférés sur Nantes",
+    "onLoadPanel": "caption",
+    "displayPopupFooter": false,
+    "miniMap": false,
+    "moreControl": true,
+    "scaleControl": true,
+    "scrollWheelZoom": true,
+    "zoom": 14
+  },
+  "geometry": {
+    "type": "Point",
+    "coordinates": [
+      -1.5547370910644531,
+      47.215195776800634
+    ]
+  },
+  "layers": [
+    {
+      "type": "FeatureCollection",
+      "features": [
+        {
+          "type": "Feature",
+          "properties": {
+            "osm_id": 2207079974,
+            "osm_type": "N",
+            "country": "France",
+            "osm_key": "shop",
+            "housenumber": "10",
+            "city": "Nantes",
+            "street": "Rue des Trois Croissants",
+            "osm_value": "deli",
+            "postcode": "44000;44100;44200;44300",
+            "name": "La Maison Bertille",
+            "state": "Pays de la Loire",
+            "description": "Ambiance maison de thés pour ce restaurant qui fait aussi épicerie fine. De la cuisine traditionnelle \"simple\" mais tellement bien réalisée qu'on y revient avec plaisir !"
+          },
+          "geometry": {
+            "type": "Point",
+            "coordinates": [
+              -1.5558033,
+              47.2165446
+            ]
+          }
+        },
+        {
+          "type": "Feature",
+          "properties": {
+            "osm_id": 3063159685,
+            "osm_type": "N",
+            "country": "France",
+            "osm_key": "amenity",
+            "city": "Nantes",
+            "street": "Rue Jean-Jacques Rousseau",
+            "osm_value": "restaurant",
+            "postcode": "44000;44100;44200;44300",
+            "name": "Restaurant - Bistro Le B",
+            "state": "Pays de la Loire"
+          },
+          "geometry": {
+            "type": "Point",
+            "coordinates": [
+              -1.5615286,
+              47.2128177
+            ]
+          }
+        }
+      ],
+      "_storage": {
+        "displayOnLoad": true,
+        "browsable": true,
+        "name": "Restaurants",
+        "id": 351243,
+        "remoteData": {},
+        "description": "La liste des restaurants que j'aime fréquenter",
+        "iconUrl": "/uploads/pictogram/fast-food-24_1.png",
+        "color": "DarkRed"
+      }
+    },
+    {
+      "type": "FeatureCollection",
+      "features": [
+        {
+          "type": "Feature",
+          "properties": {
+            "osm_id": 364665999,
+            "osm_type": "N",
+            "country": "France",
+            "osm_key": "amenity",
+            "city": "Nantes",
+            "street": "Rue du Petit Bacchus",
+            "osm_value": "pub",
+            "postcode": "44000;44100;44200;44300",
+            "name": "Le Perrok'",
+            "state": "Pays de la Loire",
+            "description": "LaKwak dans son verre en version pinte ! C'est pas pratique, mais ça en jette =D"
+          },
+          "geometry": {
+            "type": "Point",
+            "coordinates": [
+              -1.5529579,
+              47.215092
+            ]
+          }
+        },
+        {
+          "type": "Feature",
+          "properties": {
+            "osm_id": 476294587,
+            "osm_type": "N",
+            "country": "France",
+            "osm_key": "amenity",
+            "housenumber": "15",
+            "city": "Nantes",
+            "street": "Rue Beauregard",
+            "osm_value": "pub",
+            "postcode": "44000",
+            "name": "Le Sur Mesure (1/2)",
+            "state": "Pays de la Loire",
+            "description": "PLEIN de bières en pression, j'aime leurs conseils et j'aime l'ambiance."
+          },
+          "geometry": {
+            "type": "Point",
+            "coordinates": [
+              -1.5553727,
+              47.2148123
+            ]
+          }
+        },
+        {
+          "type": "Feature",
+          "properties": {
+            "osm_id": 476294587,
+            "osm_type": "N",
+            "country": "France",
+            "osm_key": "amenity",
+            "housenumber": "15",
+            "city": "Nantes",
+            "street": "Rue Beauregard",
+            "osm_value": "pub",
+            "postcode": "44000",
+            "name": "Le Sur Mesure (2/2)",
+            "state": "Pays de la Loire",
+            "description": "Le même, mais ailleurs."
+          },
+          "geometry": {
+            "type": "Point",
+            "coordinates": [
+              -1.5602946281433108,
+              47.212375429121984
+            ]
+          }
+        }
+      ],
+      "_storage": {
+        "displayOnLoad": true,
+        "browsable": true,
+        "remoteData": {},
+        "name": "Bars",
+        "description": "Là où j'aime boire et discuter. Si l'un de ces lieux est mentionné je ne peux pas refuser l'invitation.",
+        "id": 351260,
+        "iconUrl": "/uploads/pictogram/bar-24_1.png",
+        "color": "OrangeRed"
+      }
+    },
+    {
+      "type": "FeatureCollection",
+      "features": [
+        {
+          "type": "Feature",
+          "properties": {
+            "osm_id": 26692749,
+            "osm_type": "W",
+            "extent": [
+              -1.5494055,
+              47.2108877,
+              -1.5487811,
+              47.2097728
+            ],
+            "country": "France",
+            "osm_key": "highway",
+            "city": "Nantes",
+            "osm_value": "residential",
+            "postcode": "44000;44100;44200;44300",
+            "name": "Clever Age",
+            "state": "Pays de la Loire",
+            "description": "Agence de Nantes, locaux atypiques et agréables. Super expérience là bas qui m'a permis d'acquérir du savoir-faire web (html, css, responsive web design) et JavaScript auprès de gens compétents."
+          },
+          "geometry": {
+            "type": "Point",
+            "coordinates": [
+              -1.5510571002960205,
+              47.21248474771768
+            ]
+          }
+        },
+        {
+          "type": "Feature",
+          "properties": {
+            "name": "EffiTIC",
+            "description": "Société de service en informatique. N'a cessé de changer de nom et à démagé depuis que je suis parti, c'est donc plus ici ni sous ce nom."
+          },
+          "geometry": {
+            "type": "Point",
+            "coordinates": [
+              -1.535993814468384,
+              47.24335458582229
+            ]
+          }
+        },
+        {
+          "type": "Feature",
+          "properties": {
+            "osm_id": 107589342,
+            "osm_type": "W",
+            "extent": [
+              -0.7827349,
+              46.455531,
+              -0.7817549,
+              46.454647
+            ],
+            "country": "France",
+            "osm_key": "building",
+            "city": "Nantes",
+            "osm_value": "yes",
+            "name": "Horoquartz",
+            "state": "Pays de la Loire",
+            "description": "Éditeur d'une solution de gestion de temps. J'ai travaillé là bas sur un beau projet en React, dans une équipe compétente. A suivre !"
+          },
+          "geometry": {
+            "type": "Point",
+            "coordinates": [
+              -1.6195714473724367,
+              47.22898926970426
+            ]
+          }
+        },
+        {
+          "type": "Feature",
+          "properties": {
+            "osm_id": 26270007,
+            "osm_type": "W",
+            "extent": [
+              -1.5766879,
+              47.2241596,
+              -1.5762463,
+              47.2240389
+            ],
+            "country": "France",
+            "osm_key": "highway",
+            "city": "Nantes",
+            "osm_value": "secondary",
+            "postcode": "44000;44100;44200;44300",
+            "name": "La Poste",
+            "state": "Pays de la Loire",
+            "description": "Mission de 2 ans, Java/JEE sur leur socle applicatif. Ma première mission."
+          },
+          "geometry": {
+            "type": "Point",
+            "coordinates": [
+              -1.575567126274109,
+              47.224599495560554
+            ]
+          }
+        },
+        {
+          "type": "Feature",
+          "properties": {
+            "osm_id": 85677599,
+            "osm_type": "W",
+            "extent": [
+              -1.5830454,
+              47.2330656,
+              -1.5822304,
+              47.2325778
+            ],
+            "country": "France",
+            "osm_key": "building",
+            "city": "Nantes",
+            "street": "Rue de Malville",
+            "osm_value": "yes",
+            "postcode": "44000;44100;44200;44300",
+            "name": "Ministère des Affaires étrangères",
+            "state": "Pays de la Loire",
+            "description": "Mission de 6 mois sur de la maintenance applicative Java/JEE (Framework ACube).\nMeilleur restaurant d'entreprise que j'ai pu croiser !"
+          },
+          "geometry": {
+            "type": "Point",
+            "coordinates": [
+              -1.5826371357108373,
+              47.2328193
+            ]
+          }
+        }
+      ],
+      "_storage": {
+        "displayOnLoad": true,
+        "browsable": true,
+        "remoteData": {},
+        "name": "Travail",
+        "description": "Les endroits où j'ai travaillé dans Nantes",
+        "id": 351261,
+        "color": "MidnightBlue",
+        "iconUrl": "/uploads/pictogram/commercial-24_1.png"
+      }
+    }
+  ]
+}
