@@ -9,6 +9,7 @@ import { connect } from 'react-redux'
 import * as interactions from 'app/reducers/interactions'
 import MapList from 'app/components/pages/map/MapList'
 import OLMap from 'app/components/pages/map/OLMap'
+import withData from 'app/components/hoc/withData'
 
 class MyMap extends React.PureComponent {
 
@@ -16,28 +17,11 @@ class MyMap extends React.PureComponent {
     super()
 
     this.state = {
-      umapData     : MyMap.umapData,
-      filter       : '',
+      filter : '',
     }
 
     this.setFilter = this.setFilter.bind(this)
     this.selectFeature = this.selectFeature.bind(this)
-  }
-
-  componentDidMount() {
-    if (this.state.umapData === null) {
-      fetch('/assets/map.umap')
-        .then(response => response.json())
-        .then(json => {
-          MyMap.umapData = json
-          this.setState({
-            umapData : json
-          })
-        })
-        .catch(err => {
-          console.error(err)
-        })
-    }
   }
 
   setFilter(e) {
@@ -51,35 +35,37 @@ class MyMap extends React.PureComponent {
   render() {
 
     let content = null
-    const { umapData } = this.state
+    const umapData = this.props.data
 
     if (this.props.hasStaticInteractions) {
       content = 'Static image from the server (TODO)'
     } else if (this.props.hasServerInteractions || this.mapContainer === null) {
       content = 'Dynamic image from the server (TODO)'
     } else {
-      content = 'Dynamic map clientside (loading)'
+      content = 'Dynamic map clientside'
     }
     return <div className="ta-c">
-      <div>{this.state.map === null && content}</div>
-      <div className="m-auto ta-c m-1">
+      <div className="ta-c m-1">
         <label htmlFor="filter">
           <span>Rechercher :</span>
           <input id="filter" value={this.state.filter} onChange={this.setFilter}/>
         </label>
       </div>
 
-      <OLMap umapData={umapData} filter={this.state.filter} ol={this.props.ol} selectFeature={this.selectFeature} />
+      <OLMap className="d-ib col-9 h-24 maw-100p" umapData={umapData} filter={this.state.filter} ol={this.props.ol} selectFeature={this.selectFeature}/>
 
       <div className="d-ib col-3 h-5 va-t ta-l p-1">
-        <MapList layers={umapData && umapData.layers} selectFeature={this.selectFeature} />
+        <div>
+          <span className="h-2">Listes :</span>
+          <MapList layers={umapData == null ? null : umapData.layers} filter={this.state.filter} selectFeature={this.selectFeature}/>
+        </div>
       </div>
+      <div>{content}</div>
     </div>
 
   }
 }
-
-MyMap.umapData = null
+MyMap.displayName = 'MyMap'
 
 function mapStateToProps(state) {
   return {
@@ -88,4 +74,4 @@ function mapStateToProps(state) {
   }
 }
 
-export default connect(mapStateToProps)(MyMap)
+export default connect(mapStateToProps)(withData('/assets/map.umap')(MyMap))

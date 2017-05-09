@@ -1,8 +1,9 @@
-import React from 'react'
-
 /**
  * Encapsulate the OpenLayer map plugin.
  */
+import React from 'react'
+import { filterFeature } from 'app/components/pages/map/shared'
+
 class OLMap extends React.PureComponent {
 
   constructor() {
@@ -13,7 +14,6 @@ class OLMap extends React.PureComponent {
       map          : null,
     }
     this.setMapContainer = this.setMapContainer.bind(this)
-    this.filterFeature = this.filterFeature.bind(this)
     this.updateMap = this.updateMap.bind(this)
   }
 
@@ -26,12 +26,6 @@ class OLMap extends React.PureComponent {
     }
   }
 
-  filterFeature(feature) {
-    return this.props.filter === ''
-      || (feature.properties.name && feature.properties.name.toLowerCase().indexOf(this.props.filter.toLowerCase()) > -1)
-      || (feature.properties.street && feature.properties.street.toLowerCase().indexOf(this.props.filter.toLowerCase()) > -1)
-  }
-
   updateMap() {
     const { mapContainer } = this.state
     const { umapData, ol, selectFeature } = this.props
@@ -40,41 +34,16 @@ class OLMap extends React.PureComponent {
 
     try {
 
-      const layersData = umapData.layers.map(layer => (
-        new ol.layer.Vector({
-          style  : getLayerStyle(layer),
-          source : new ol.source.Vector({
-            features : [
-              ...layer.features.filter(this.filterFeature).map(feature => new ol.Feature({
-                geometry : new ol.geom.Point(ol.proj.fromLonLat(feature.geometry.coordinates)),
-                properties: feature.properties,
-              }))
-            ]
-          })
-        })
-      ))
-
-      if (this.state.map !== null) {
-        this.state.map.getLayers().clear()
-        this.state.map.addLayer(getTileLayer(umapData.properties.tilelayer.url_template, ol))
-        layersData.forEach(layer => {
-          this.state.map.addLayer(layer)
-        })
-        this.state.map.render()
-
-      } else {
+      let map = this.state.map
+      if (this.state.map === null) {
         const mapOptions = {
           target : mapContainer,
-          layers : [
-            getTileLayer(umapData.properties.tilelayer.url_template, ol),
-            ...layersData
-          ],
           view   : new ol.View({
             center : ol.proj.fromLonLat(umapData.geometry.coordinates),
             zoom   : umapData.properties.zoom
           })
         }
-        const map = new ol.Map(mapOptions);
+        map = new ol.Map(mapOptions);
         map.on('click', function(evt) {
           const feature = map.forEachFeatureAtPixel(evt.pixel, f => f);
           if (selectFeature !== undefined) selectFeature(feature === undefined ? null : feature.getProperties())
@@ -88,6 +57,13 @@ class OLMap extends React.PureComponent {
           map
         })
       }
+
+      map.getLayers().clear()
+      map.addLayer(getTileLayer(umapData.properties.tilelayer.url_template, ol))
+      getLayersFromLayersData(umapData.layers, this.props.filter).forEach(layer => {
+        map.addLayer(layer)
+      })
+      map.render()
 
     } catch (e) {
       throw new Error(e, 'Error while reading umap data')
@@ -110,13 +86,28 @@ class OLMap extends React.PureComponent {
     let content = null
     const { umapData } = this.props
 
-    return <div className="d-ib col-9 h-24 maw-100p" ref={this.setMapContainer}/>
+    return <div className={this.props.className} ref={this.setMapContainer}/>
   }
 }
 
 
 export default OLMap
 
+function getLayersFromLayersData(layersData, filter) {
+  return layersData.map(layer => (
+    new ol.layer.Vector({
+      style  : getLayerStyle(layer),
+      source : new ol.source.Vector({
+        features : [
+          ...layer.features.filter(f => filterFeature(f, filter)).map(feature => new ol.Feature({
+            geometry : new ol.geom.Point(ol.proj.fromLonLat(feature.geometry.coordinates)),
+            properties: feature.properties,
+          }))
+        ]
+      })
+    })
+  ))
+}
 
 let TILE_LAYER = null
 function getTileLayer(url, ol = null) {

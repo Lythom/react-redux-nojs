@@ -1,18 +1,21 @@
 import React from 'react'
+import { filterFeature } from 'app/components/pages/map/shared'
 
-export default ({ layers, selectFeature }) => (
-  <div>
-    <span className="h-2">Listes :</span>
-    {layers && layers.length > 0 && (
-      <ul className="list-unstyled h-22 ov-a">
-        {layers.map(layer => (
+export default ({ layers, selectFeature, filter }) => {
+  if (layers == null || layers.length === 0) return null
+  return (
+    <ul className="list-unstyled h-22 ov-a">
+      {layers.map(layer => {
+        const features = layer.features.filter(f => filterFeature(f, filter))
+        if (features.length === 0) return null
+        return (
           <li key={layer._storage.name}>
             <div className="d-ib ta-c va-m" style={{ backgroundColor : layer._storage.color, width : 32, height : 32, lineHeight : '2.7rem' }}>
               <img src={`/assets/icons/${layer._storage.name}.png`} width="24" height="24"/>
             </div>
             <span className="va-m"> {layer._storage.name}</span>
             <ul className="list-unstyled fs-small">
-              {layer.features.map(feature => (
+              {features.map(feature => (
                 <li key={feature.properties.name}>
                   <button className="btn ta-l p-1" onClick={e => selectFeature(feature)}>
                     {feature.properties.name}<br/>
@@ -22,8 +25,8 @@ export default ({ layers, selectFeature }) => (
               ))}
             </ul>
           </li>
-        ))}
-      </ul>
-    )}
-  </div>
-)
+        )
+      })}
+    </ul>
+  )
+}
