@@ -1,6 +1,37 @@
 $h-spacing: 1rem;
 $v-spacing: 1.5rem;
 
+* {
+  box-sizing: border-box;
+}
+
+// helpers
+.list-unstyled {
+  padding-left: 0;
+  list-style: none;
+}
+
+.btn {
+  color: #333;
+  background-color: #fff;
+  border-color: #ccc;
+  display: inline-block;
+  text-align: center;
+  vertical-align: middle;
+  -ms-touch-action: manipulation;
+  touch-action: manipulation;
+  cursor: pointer;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  background-image: none;
+  border: 1px solid transparent;
+  border-radius: 4px;
+}
+
+// styles
+
 .d-ib {
   display: inline-block;
 }
@@ -9,12 +40,8 @@ $v-spacing: 1.5rem;
   float: left;
 }
 
-.m-auto {
-  margin: auto;
-}
-
-.mr-1 {
-  margin: $h-spacing;
+.fs-small {
+  font-size: 0.8rem;
 }
 
 .g-10 {
@@ -24,15 +51,53 @@ $v-spacing: 1.5rem;
   }
 }
 
+.lh-2 {
+  line-height: $v-spacing * 2;
+}
+
+.m-auto {
+  margin: auto;
+}
+
+.m-1 {
+  margin: $h-spacing;
+}
+
 .maw-100p {
   max-width: 100%;
 }
 
-// specifics
-.col-12 {
-  width: 960px;
+.ov-a {
+  overflow: auto;
 }
 
-.h-24 {
-  height: 24 * $v-spacing;
+.p-1 {
+  padding: $h-spacing;
+}
+
+.ta-c {
+  text-align: center;
+}
+.ta-l {
+  text-align: left;
+}
+
+.va-m {
+  vertical-align: middle;
+}
+.va-t {
+  vertical-align: top;
+}
+
+// specifics
+@for $i from 1 to 13 {
+  .col-#{$i} {
+    width: 80px * $i // 80 to 960 px
+  }
+}
+
+@for $i from 1 to 25 {
+  .h-#{$i} {
+    height: $i * $v-spacing; // 80 to 960 px
+  }
 }

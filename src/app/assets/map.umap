@@ -39,13 +39,13 @@
     "moreControl": true,
     "scaleControl": true,
     "scrollWheelZoom": true,
-    "zoom": 14
+    "zoom": 13
   },
   "geometry": {
     "type": "Point",
     "coordinates": [
-      -1.5547370910644531,
-      47.215195776800634
+      -1.568126678466797,
+      47.23006024656677
     ]
   },
   "layers": [

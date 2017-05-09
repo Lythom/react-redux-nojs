@@ -1,13 +1,15 @@
-import React from 'react'
-import { connect } from 'react-redux'
-import * as interactions from 'app/reducers/interactions'
-
 /**
  * Display a dynamic map.
  * * Dynamic interactions : ✔ allowed
  * * Server interactions  : ✔ allowed
  * * Static interactions  : ✘ disabled
  */
+import React from 'react'
+import { connect } from 'react-redux'
+import * as interactions from 'app/reducers/interactions'
+import MapList from 'app/components/pages/map/MapList'
+import OLMap from 'app/components/pages/map/OLMap'
+
 class MyMap extends React.PureComponent {
 
   constructor() {
@@ -15,11 +17,11 @@ class MyMap extends React.PureComponent {
 
     this.state = {
       umapData     : MyMap.umapData,
-      mapContainer : null,
-      map          : null,
+      filter       : '',
     }
 
-    this.setMapContainer = this.setMapContainer.bind(this)
+    this.setFilter = this.setFilter.bind(this)
+    this.selectFeature = this.selectFeature.bind(this)
   }
 
   componentDidMount() {
@@ -38,91 +40,18 @@ class MyMap extends React.PureComponent {
     }
   }
 
-  componentDidUpdate(prevProps, prevState) {
-    if (prevState.umapData !== this.state.umapData || prevState.mapContainer !== this.state.mapContainer || prevProps.ol !== this.props.ol) {
-      this.updateMap()
-    }
+  setFilter(e) {
+    this.setState({ filter : e.target.value })
   }
 
-  updateMap() {
-    const { mapContainer, umapData } = this.state
-    const ol = this.props.ol
-
-    if (mapContainer === null || umapData === null || ol === null) return
-
-    try {
-
-      const layersData = umapData.layers.map(layer => (
-        new ol.layer.Vector({
-          style  : [
-            // background
-            new ol.style.Style({
-              // image: layer.iconUrl
-              image : new ol.style.Icon({
-                anchor : [0.5, 0.96],
-                color  : layer._storage.color || umapData.properties.color,
-                src    : '/assets/marker.png'
-              })
-            }),
-            //foreground icon
-            new ol.style.Style({
-              // image: layer.iconUrl
-              image : new ol.style.Icon({
-                anchor      : [0.5, 1.7],
-                color       : 'white',
-                src         : `/assets/icons/${layer._storage.name}.png`
-              })
-            })
-          ],
-          source : new ol.source.Vector({
-            features : [
-              ...layer.features.map(feature => new ol.Feature({
-                geometry : new ol.geom.Point(ol.proj.fromLonLat(feature.geometry.coordinates))
-              }))
-            ]
-          })
-        })
-      ))
-
-      const mapOptions = {
-        target : mapContainer,
-        layers : [
-          new ol.layer.Tile({
-            source : new ol.source.OSM({
-              url : umapData.properties.tilelayer.url_template
-            })
-          }),
-          ...layersData
-        ],
-        view   : new ol.View({
-          center : ol.proj.fromLonLat(umapData.geometry.coordinates),
-          zoom   : umapData.properties.zoom
-        })
-      }
-      const map = new ol.Map(mapOptions);
-
-      this.setState({
-        map
-      })
-    } catch (e) {
-      throw new Error(e, 'Error while reading umap data')
-    }
-  }
-
-  setMapContainer(container) {
-    if (container !== null) {
-      this.setState({
-        mapContainer : container
-      })
-    }
-    else if (this.map !== null) {
-      this.map = null
-    }
+  selectFeature(feature) {
+    this.setState({ filter : feature === null ? '' : feature.properties.name })
   }
 
   render() {
 
     let content = null
+    const { umapData } = this.state
 
     if (this.props.hasStaticInteractions) {
       content = 'Static image from the server (TODO)'
@@ -131,9 +60,20 @@ class MyMap extends React.PureComponent {
     } else {
       content = 'Dynamic map clientside (loading)'
     }
-    return <div>
+    return <div className="ta-c">
       <div>{this.state.map === null && content}</div>
-      <div className="m-auto col-12 h-24 maw-100p" ref={this.setMapContainer}/>
+      <div className="m-auto ta-c m-1">
+        <label htmlFor="filter">
+          <span>Rechercher :</span>
+          <input id="filter" value={this.state.filter} onChange={this.setFilter}/>
+        </label>
+      </div>
+
+      <OLMap umapData={umapData} filter={this.state.filter} ol={this.props.ol} selectFeature={this.selectFeature} />
+
+      <div className="d-ib col-3 h-5 va-t ta-l p-1">
+        <MapList layers={umapData && umapData.layers} selectFeature={this.selectFeature} />
+      </div>
     </div>
 
   }
