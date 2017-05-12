@@ -2,8 +2,15 @@
  * Encapsulate the OpenLayer map plugin.
  */
 import React from 'react'
-import { getLayersFromLayersData, getTileLayer } from 'app/components/pages/map/shared'
+import { getFilteredFeatures, getLayersFromLayersData, getTileLayer } from 'app/components/pages/map/shared'
 
+/**
+ * Props :
+ * registerSelectFeature
+ * umapData data to display in the map
+ * filter   text filter
+ * ol       openlayer lib
+ */
 class OLMap extends React.PureComponent {
 
   constructor() {
@@ -31,14 +38,13 @@ class OLMap extends React.PureComponent {
       || prevState.mapContainer !== this.state.mapContainer
       || prevState.popupContainer !== this.state.popupContainer) {
       this.updateMap()
-
     }
   }
 
   selectFeature(feature) {
     if (this.state.map === null) return
     let properties = null
-    if (feature != null){
+    if (feature != null) {
       properties = feature.properties || feature.getProperties().properties
     }
 
@@ -51,7 +57,8 @@ class OLMap extends React.PureComponent {
       if (this.state.selection != null) {
         const coords = (feature.geometry && ol.proj.fromLonLat(feature.geometry.coordinates)) || feature.getGeometry().getCoordinates()
         overlay.setPosition(coords)
-        view.animate({ center : coords, duration : 500, zoom : 15 })
+        console.log('test')
+        view.animate({ center : coords, duration : 150, zoom : view.getZoom() })
       }
       this.setState({ popupHeight : this.state.popupContainer.offsetHeight + 20 })
     })
@@ -70,10 +77,6 @@ class OLMap extends React.PureComponent {
 
         const overlay = new ol.Overlay(({
           element          : popupContainer,
-          autoPan          : true,
-          autoPanAnimation : {
-            duration : 250
-          }
         }));
 
         const mapOptions = {
@@ -107,6 +110,14 @@ class OLMap extends React.PureComponent {
       })
       map.render()
 
+      const coordinates = getFilteredFeatures(umapData.layers, this.props.filter).map(f => f.geometry.coordinates)
+      if (coordinates.length > 1) {
+        console.log('fit')
+        let boundingExtent = ol.extent.boundingExtent(coordinates);
+        boundingExtent = ol.proj.transformExtent(boundingExtent, ol.proj.get('EPSG:4326'), ol.proj.get('EPSG:3857'));
+        map.getView().fit(boundingExtent, { size : map.getSize(), duration : 150 });
+      }
+
     } catch (e) {
       throw new Error(e, 'Error while reading umap data')
     }
@@ -134,13 +145,14 @@ class OLMap extends React.PureComponent {
     let content = null
     const { umapData } = this.props
 
-    return <div className={this.props.className}>
-      <div className="h-24" ref={this.setMapContainer}/>
+    return <div className={'pos-r ' + this.props.className}>
+      <div className="h-24" ref={this.setMapContainer}><img className={`pos-a ${this.state.mapContainer ? 'op-03' : ''} l-0 t-0`} src="assets/mapPlaceholder.png" height="auto"/>
+      </div>
       <div className="pos-a bgc-1 p-1 bd-2" ref={this.setPopupContainer}
            style={{
              display     : this.state.selection != null ? 'block' : 'none',
-             left        : -160,
-             top         : this.state.popupHeight ? -this.state.popupHeight - 22 : 0,
+             left        : `calc(50% - 160px)`,
+             top         : this.state.popupHeight ? -this.state.popupHeight - 22 : 100,
              width       : 320,
              borderColor : this.state.selection ? this.state.selection.color : null
            }}>

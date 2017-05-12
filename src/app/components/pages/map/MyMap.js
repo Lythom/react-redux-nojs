@@ -31,12 +31,8 @@ class MyMap extends React.PureComponent {
     if (features.length === 1) {
       this.state.selectFeature(features[0])
     }
-    else if (features.length > 1) {
-
-
-      if (this.state.selectFeature) {
+    else if (this.state.selectFeature) {
         this.state.selectFeature(null)
-      }
     }
   }
 

@@ -1,6 +1,9 @@
 $h-spacing: 1rem;
 $v-spacing: 1.5rem;
 
+$frontColor-1: #000000;
+$backColor-1: #f8f7f3;
+
 * {
   box-sizing: border-box;
 }
@@ -32,6 +35,14 @@ $v-spacing: 1.5rem;
 
 // styles
 
+.bd-2 {
+  border: 2px solid black;
+}
+
+.bgc-1 {
+  background-color: $backColor-1;
+}
+
 .d-ib {
   display: inline-block;
 }
@@ -47,8 +58,15 @@ $v-spacing: 1.5rem;
 .g-10 {
   margin-right: 10px;
   &:last-child {
-    margin-right: 0px;
+    margin-right: 0;
   }
+}
+
+.l-0 {
+  left:0;
+}
+.t-0 {
+  top:0;
 }
 
 .lh-2 {
@@ -73,6 +91,13 @@ $v-spacing: 1.5rem;
 
 .p-1 {
   padding: $h-spacing;
+}
+
+.pos-a {
+  position: absolute;
+}
+.pos-r {
+  position: relative;
 }
 
 .ta-c {
@@ -100,4 +125,8 @@ $v-spacing: 1.5rem;
   .h-#{$i} {
     height: $i * $v-spacing; // 80 to 960 px
   }
+}
+
+.op-03 {
+  opacity: 0.3;
 }

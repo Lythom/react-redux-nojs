@@ -21,11 +21,12 @@ export function getLayersFromLayersData(layersData, filter) {
 }
 
 export function getFilteredFeatures(layersData, filter) {
-  const features = [].concat(...layersData.map(l => l.features)).filter(f => filterFeature(f, filter))
+  const allFeatures = [].concat(...layersData.map(l => l.features))
+  const features = allFeatures.filter(f => filterFeature(f, filter))
 
   // TODO réutiliser dans le rendu côté serveur pour ajouter par dessus la popin avec les données de l'élément unique.
   // TODO la réutiliser dans le rendu côté serveur lister les points à afficher comme markers ?
-  return features
+  return features.length > 0 ? features : allFeatures
 }
 
 
