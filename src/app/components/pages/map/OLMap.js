@@ -2,7 +2,7 @@
  * Encapsulate the OpenLayer map plugin.
  */
 import React from 'react'
-import { filterFeature } from 'app/components/pages/map/shared'
+import { getLayersFromLayersData, getTileLayer } from 'app/components/pages/map/shared'
 
 class OLMap extends React.PureComponent {
 
@@ -12,43 +12,85 @@ class OLMap extends React.PureComponent {
     this.state = {
       mapContainer : null,
       map          : null,
+      selection    : null,
     }
     this.setMapContainer = this.setMapContainer.bind(this)
+    this.setPopupContainer = this.setPopupContainer.bind(this)
     this.updateMap = this.updateMap.bind(this)
+    this.selectFeature = this.selectFeature.bind(this)
+  }
+
+  componentDidMount() {
+    if (this.props.registerSelectFeature) this.props.registerSelectFeature(this.selectFeature)
   }
 
   componentDidUpdate(prevProps, prevState) {
     if (prevProps.umapData !== this.props.umapData
       || prevProps.filter !== this.props.filter
       || prevProps.ol !== this.props.ol
-      || prevState.mapContainer !== this.state.mapContainer) {
+      || prevState.mapContainer !== this.state.mapContainer
+      || prevState.popupContainer !== this.state.popupContainer) {
       this.updateMap()
+
     }
   }
 
-  updateMap() {
-    const { mapContainer } = this.state
-    const { umapData, ol, selectFeature } = this.props
+  selectFeature(feature) {
+    if (this.state.map === null) return
+    let properties = null
+    if (feature != null){
+      properties = feature.properties || feature.getProperties().properties
+    }
 
-    if (mapContainer === null || umapData === null || ol === null) return
+    this.setState({
+      selection : properties
+    }, () => {
+      if (this.state.selection === null) return
+      const overlay = this.state.map.getOverlays().getArray()[0]
+      const view = this.state.map.getView()
+      if (this.state.selection != null) {
+        const coords = (feature.geometry && ol.proj.fromLonLat(feature.geometry.coordinates)) || feature.getGeometry().getCoordinates()
+        overlay.setPosition(coords)
+        view.animate({ center : coords, duration : 500, zoom : 15 })
+      }
+      this.setState({ popupHeight : this.state.popupContainer.offsetHeight + 20 })
+    })
+  }
+
+  updateMap() {
+    const { mapContainer, popupContainer } = this.state
+    const { umapData, ol } = this.props
+
+    if (mapContainer === null || umapData === null || ol === null || popupContainer === null) return
 
     try {
 
       let map = this.state.map
       if (this.state.map === null) {
+
+        const overlay = new ol.Overlay(({
+          element          : popupContainer,
+          autoPan          : true,
+          autoPanAnimation : {
+            duration : 250
+          }
+        }));
+
         const mapOptions = {
-          target : mapContainer,
-          view   : new ol.View({
+          target   : mapContainer,
+          overlays : [overlay],
+          view     : new ol.View({
             center : ol.proj.fromLonLat(umapData.geometry.coordinates),
             zoom   : umapData.properties.zoom
           })
         }
+
         map = new ol.Map(mapOptions);
-        map.on('click', function(evt) {
+        map.on('click', evt => {
           const feature = map.forEachFeatureAtPixel(evt.pixel, f => f);
-          if (selectFeature !== undefined) selectFeature(feature === undefined ? null : feature.getProperties())
+          this.selectFeature(feature)
         });
-        map.on('pointermove', function(e) {
+        map.on('pointermove', e => {
           const pixel = map.getEventPixel(e.originalEvent);
           const hit = map.hasFeatureAtPixel(pixel);
           map.getTarget().style.cursor = hit ? 'pointer' : '';
@@ -81,65 +123,33 @@ class OLMap extends React.PureComponent {
     }
   }
 
+  setPopupContainer(container) {
+    this.setState({
+      popupContainer : container
+    })
+  }
+
   render() {
 
     let content = null
     const { umapData } = this.props
 
-    return <div className={this.props.className} ref={this.setMapContainer}/>
+    return <div className={this.props.className}>
+      <div className="h-24" ref={this.setMapContainer}/>
+      <div className="pos-a bgc-1 p-1 bd-2" ref={this.setPopupContainer}
+           style={{
+             display     : this.state.selection != null ? 'block' : 'none',
+             left        : -160,
+             top         : this.state.popupHeight ? -this.state.popupHeight - 22 : 0,
+             width       : 320,
+             borderColor : this.state.selection ? this.state.selection.color : null
+           }}>
+        <strong>{this.state.selection && this.state.selection.name}</strong>
+        <div>{this.state.selection && this.state.selection.description}</div>
+      </div>
+    </div>
   }
 }
 
 
 export default OLMap
-
-function getLayersFromLayersData(layersData, filter) {
-  return layersData.map(layer => (
-    new ol.layer.Vector({
-      style  : getLayerStyle(layer),
-      source : new ol.source.Vector({
-        features : [
-          ...layer.features.filter(f => filterFeature(f, filter)).map(feature => new ol.Feature({
-            geometry : new ol.geom.Point(ol.proj.fromLonLat(feature.geometry.coordinates)),
-            properties: feature.properties,
-          }))
-        ]
-      })
-    })
-  ))
-}
-
-let TILE_LAYER = null
-function getTileLayer(url, ol = null) {
-  if (TILE_LAYER !== null) return TILE_LAYER
-  if (!ol) return null
-  TILE_LAYER = new ol.layer.Tile({
-    source : new ol.source.OSM({
-      url : url,
-    })
-  })
-  return TILE_LAYER
-}
-
-function getLayerStyle(layer) {
-  return [
-    // background
-    new ol.style.Style({
-      // image: layer.iconUrl
-      image : new ol.style.Icon({
-        anchor : [0.5, 0.96],
-        color  : layer._storage.color || umapData.properties.color,
-        src    : '/assets/marker.png'
-      })
-    }),
-    //foreground icon
-    new ol.style.Style({
-      // image: layer.iconUrl
-      image : new ol.style.Icon({
-        anchor : [0.5, 1.7],
-        color  : 'white',
-        src    : `/assets/icons/${layer._storage.name}.png`
-      })
-    })
-  ]
-}

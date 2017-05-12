@@ -10,6 +10,7 @@ import * as interactions from 'app/reducers/interactions'
 import MapList from 'app/components/pages/map/MapList'
 import OLMap from 'app/components/pages/map/OLMap'
 import withData from 'app/components/hoc/withData'
+import { getFilteredFeatures } from 'app/components/pages/map/shared'
 
 class MyMap extends React.PureComponent {
 
@@ -21,15 +22,26 @@ class MyMap extends React.PureComponent {
     }
 
     this.setFilter = this.setFilter.bind(this)
-    this.selectFeature = this.selectFeature.bind(this)
+    this.registerSelectFeature = this.registerSelectFeature.bind(this)
   }
 
   setFilter(e) {
     this.setState({ filter : e.target.value })
+    const features = getFilteredFeatures(this.props.data.layers, e.target.value)
+    if (features.length === 1) {
+      this.state.selectFeature(features[0])
+    }
+    else if (features.length > 1) {
+
+
+      if (this.state.selectFeature) {
+        this.state.selectFeature(null)
+      }
+    }
   }
 
-  selectFeature(feature) {
-    this.setState({ filter : feature === null ? '' : feature.properties.name })
+  registerSelectFeature(selectFeature) {
+    this.setState({ selectFeature })
   }
 
   render() {
@@ -52,12 +64,12 @@ class MyMap extends React.PureComponent {
         </label>
       </div>
 
-      <OLMap className="d-ib col-9 h-24 maw-100p" umapData={umapData} filter={this.state.filter} ol={this.props.ol} selectFeature={this.selectFeature}/>
+      <OLMap className="d-ib col-9 h-24 maw-100p" umapData={umapData} filter={this.state.filter} ol={this.props.ol} registerSelectFeature={this.registerSelectFeature}/>
 
       <div className="d-ib col-3 h-5 va-t ta-l p-1">
         <div>
           <span className="h-2">Listes :</span>
-          <MapList layers={umapData == null ? null : umapData.layers} filter={this.state.filter} selectFeature={this.selectFeature}/>
+          <MapList layers={umapData == null ? null : umapData.layers} filter={this.state.filter} selectFeature={this.state.selectFeature}/>
         </div>
       </div>
       <div>{content}</div>

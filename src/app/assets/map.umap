@@ -88,7 +88,8 @@
             "osm_value": "restaurant",
             "postcode": "44000;44100;44200;44300",
             "name": "Restaurant - Bistro Le B",
-            "state": "Pays de la Loire"
+            "state": "Pays de la Loire",
+            "description": "Mon restau burger préféré sur Nantes. Y'en a même qui avait des ingrédient que j'aime pas d'habitude, mais là ils étaient bons."
           },
           "geometry": {
             "type": "Point",
@@ -286,7 +287,7 @@
             "postcode": "44000;44100;44200;44300",
             "name": "La Poste",
             "state": "Pays de la Loire",
-            "description": "Mission de 2 ans, Java/JEE sur leur socle applicatif. Ma première mission."
+            "description": "la toute première mission de ma carrière ! C'était du Java/JEE sur le socle applicatif maison."
           },
           "geometry": {
             "type": "Point",
