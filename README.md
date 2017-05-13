@@ -356,8 +356,10 @@ npm install --save-dev cookie-parser
 * Map components
   * MapPage for navigation and openLayer 3 dynamic fetching and injection
   * MyMap to assemble Filter / Map / List componants
-  * OLMap to wrap the OpenLayer plugin and display popup
-  * 
+  * OLMap to wrap the OpenLayer plugin and display the points on a map
+  * MapList to display the filtered textual list of points
+  * SelectionPopup to display a popup statically or dynamically
+* Utilities functions to work with the data
 
 ### server side form
 

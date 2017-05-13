@@ -1,5 +1,5 @@
 import React from 'react'
-import { filterFeature } from 'app/components/pages/map/shared'
+import { filterFeature } from 'app/components/pages/map/umapDataSelectors'
 
 export default ({ layers, filter, setFeature }) => {
   if (layers == null || layers.length === 0) return null

@@ -2,7 +2,8 @@
  * Encapsulate the OpenLayer map plugin.
  */
 import React from 'react'
-import { getFeatureByName, getFilteredFeatures, getLayersFromLayersData, getTileLayer } from 'app/components/pages/map/shared'
+import { getLayersFromLayersData, getTileLayer } from 'app/components/pages/map/olHelpers'
+import { getFeatureByName, getFilteredFeatures } from 'app/components/pages/map/umapDataSelectors'
 import debounce from 'app/helpers/debounce'
 import * as map from 'app/reducers/map'
 import { connect } from 'react-redux'

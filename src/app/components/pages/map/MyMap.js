@@ -11,7 +11,7 @@ import * as interactions from 'app/reducers/interactions'
 import MapList from 'app/components/pages/map/MapList'
 import OLMap from 'app/components/pages/map/OLMap'
 import withData from 'app/components/hoc/withData'
-import { getFilteredFeatures } from 'app/components/pages/map/shared'
+import { getFilteredFeatures } from 'app/components/pages/map/umapDataSelectors'
 import * as map from 'app/reducers/map'
 import SelectionPopup from 'app/components/pages/map/SelectionPopup'
 

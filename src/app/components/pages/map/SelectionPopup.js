@@ -1,5 +1,5 @@
 import React from 'react'
-import { getFeatureByName, getFeatureColor } from 'app/components/pages/map/shared'
+import { getFeatureByName, getFeatureColor } from 'app/components/pages/map/umapDataSelectors'
 import * as map from 'app/reducers/map'
 import { connect } from 'react-redux'
 
