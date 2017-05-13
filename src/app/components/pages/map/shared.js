@@ -28,6 +28,13 @@ export function getFilteredFeatures(layersData, filter) {
   // TODO la réutiliser dans le rendu côté serveur lister les points à afficher comme markers ?
   return features.length > 0 ? features : allFeatures
 }
+export function getFeatureByName(layersData, featureName) {
+  if (featureName == null) return null
+  const allFeatures = [].concat(...layersData.map(l => l.features))
+  const features = allFeatures.filter(f => filterFeature(f, featureName))
+
+  return features.length > 0 ? features[0] : null
+}
 
 
 let TILE_LAYER = null

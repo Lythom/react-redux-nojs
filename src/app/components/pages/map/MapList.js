@@ -1,7 +1,7 @@
 import React from 'react'
 import { filterFeature } from 'app/components/pages/map/shared'
 
-export default ({ layers, selectFeature, filter }) => {
+export default ({ layers, filter, setFeature }) => {
   if (layers == null || layers.length === 0) return null
   return (
     <ul className="list-unstyled h-22 ov-a">
@@ -17,7 +17,7 @@ export default ({ layers, selectFeature, filter }) => {
             <ul className="list-unstyled fs-small">
               {features.map(feature => (
                 <li key={feature.properties.name}>
-                  <button className="btn ta-l p-1" onClick={e => selectFeature(feature)}>
+                  <button className="btn ta-l p-1" onClick={e => setFeature(feature.properties.name)}>
                     {feature.properties.name}<br/>
                     {feature.properties.street} - {feature.properties.city}
                   </button>

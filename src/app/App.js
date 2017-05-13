@@ -1,5 +1,6 @@
 import React from 'react'
 import { connect } from 'react-redux'
+import { bindActionCreators } from 'redux'
 import {
   Route,
   withRouter,
@@ -22,10 +23,10 @@ const App = React.createClass({
   render() {
     return <Layout>
       <Helmet>
-        <meta charSet="utf-8" />
+        <meta charSet="utf-8"/>
         <title>{'Samuel Bouchet'}</title>
       </Helmet>
-      <Route path="/" exact render={() => <h1>Home Page !<Redirect to="/index.html" /></h1>}/>
+      <Route path="/" exact render={() => <h1>Home Page !<Redirect to="/index.html"/></h1>}/>
       <Route path="/index.html" render={() => <h1>Home Page !</h1>}/>
       <Route path="/demo.html" component={Counter}/>
       <Route path="/map.html" component={MapPage}/>
@@ -34,9 +35,9 @@ const App = React.createClass({
 })
 
 function mapDispatchToProps(dispatch) {
-  return {
-    setDynamic : () => dispatch(interactions.actions.setDynamic())
-  }
+  return bindActionCreators({
+    setDynamic : interactions.actions.setDynamic
+  }, dispatch)
 }
 
 export default withRouter(connect(undefined, mapDispatchToProps)(App))

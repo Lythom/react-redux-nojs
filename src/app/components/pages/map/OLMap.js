@@ -2,13 +2,17 @@
  * Encapsulate the OpenLayer map plugin.
  */
 import React from 'react'
-import { getFilteredFeatures, getLayersFromLayersData, getTileLayer } from 'app/components/pages/map/shared'
+import { getFeatureByName, getFilteredFeatures, getLayersFromLayersData, getTileLayer } from 'app/components/pages/map/shared'
+import debounce from 'app/helpers/debounce'
+import * as map from 'app/reducers/map'
+import { connect } from 'react-redux'
 
 /**
  * Props :
  * registerSelectFeature
  * umapData data to display in the map
  * filter   text filter
+ * setFeature to set a selected feature
  * ol       openlayer lib
  */
 class OLMap extends React.PureComponent {
@@ -23,12 +27,8 @@ class OLMap extends React.PureComponent {
     }
     this.setMapContainer = this.setMapContainer.bind(this)
     this.setPopupContainer = this.setPopupContainer.bind(this)
-    this.updateMap = this.updateMap.bind(this)
+    this.updateMap = debounce(this.updateMap.bind(this), 250)
     this.selectFeature = this.selectFeature.bind(this)
-  }
-
-  componentDidMount() {
-    if (this.props.registerSelectFeature) this.props.registerSelectFeature(this.selectFeature)
   }
 
   componentDidUpdate(prevProps, prevState) {
@@ -39,13 +39,17 @@ class OLMap extends React.PureComponent {
       || prevState.popupContainer !== this.state.popupContainer) {
       this.updateMap()
     }
+
+    if (prevProps.selectedFeature !== this.props.selectedFeature) {
+      this.selectFeature(getFeatureByName(this.props.umapData.layers, this.props.selectedFeature))
+    }
   }
 
   selectFeature(feature) {
     if (this.state.map === null) return
     let properties = null
     if (feature != null) {
-      properties = feature.properties || feature.getProperties().properties
+      properties = feature.properties
     }
 
     this.setState({
@@ -55,9 +59,8 @@ class OLMap extends React.PureComponent {
       const overlay = this.state.map.getOverlays().getArray()[0]
       const view = this.state.map.getView()
       if (this.state.selection != null) {
-        const coords = (feature.geometry && ol.proj.fromLonLat(feature.geometry.coordinates)) || feature.getGeometry().getCoordinates()
+        const coords = ol.proj.fromLonLat(feature.geometry.coordinates)
         overlay.setPosition(coords)
-        console.log('test')
         view.animate({ center : coords, duration : 150, zoom : view.getZoom() })
       }
       this.setState({ popupHeight : this.state.popupContainer.offsetHeight + 20 })
@@ -76,7 +79,7 @@ class OLMap extends React.PureComponent {
       if (this.state.map === null) {
 
         const overlay = new ol.Overlay(({
-          element          : popupContainer,
+          element : popupContainer,
         }));
 
         const mapOptions = {
@@ -91,7 +94,7 @@ class OLMap extends React.PureComponent {
         map = new ol.Map(mapOptions);
         map.on('click', evt => {
           const feature = map.forEachFeatureAtPixel(evt.pixel, f => f);
-          this.selectFeature(feature)
+          this.props.setFeature(feature ? feature.getProperties().properties.name : null)
         });
         map.on('pointermove', e => {
           const pixel = map.getEventPixel(e.originalEvent);
@@ -112,7 +115,6 @@ class OLMap extends React.PureComponent {
 
       const coordinates = getFilteredFeatures(umapData.layers, this.props.filter).map(f => f.geometry.coordinates)
       if (coordinates.length > 1) {
-        console.log('fit')
         let boundingExtent = ol.extent.boundingExtent(coordinates);
         boundingExtent = ol.proj.transformExtent(boundingExtent, ol.proj.get('EPSG:4326'), ol.proj.get('EPSG:3857'));
         map.getView().fit(boundingExtent, { size : map.getSize(), duration : 150 });
@@ -152,7 +154,8 @@ class OLMap extends React.PureComponent {
            style={{
              display     : this.state.selection != null ? 'block' : 'none',
              left        : `calc(50% - 160px)`,
-             top         : this.state.popupHeight ? -this.state.popupHeight - 22 : 100,
+             top         : this.state.popupHeight ? -this.state.popupHeight - 22 : null,
+             bottom      : this.state.popupHeight ? null : `calc(50% - 22px)`,
              width       : 320,
              borderColor : this.state.selection ? this.state.selection.color : null
            }}>
@@ -164,4 +167,11 @@ class OLMap extends React.PureComponent {
 }
 
 
-export default OLMap
+function mapStateToProps(state) {
+  return {
+    filter             : map.selectors.getFilter(state.map),
+    selectedFeature : map.selectors.getSelectedFeature(state.map),
+  }
+}
+
+export default connect(mapStateToProps)(OLMap)
