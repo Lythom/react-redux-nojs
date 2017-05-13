@@ -36,6 +36,12 @@ export function getFeatureByName(layersData, featureName) {
   return features.length > 0 ? features[0] : null
 }
 
+export function getFeatureColor(layersData, featureName) {
+  if (featureName == null) return null
+  const layer = layersData.find(layer => layer.features.some(f => filterFeature(f, featureName)))
+  return layer ? layer._storage.color : null
+}
+
 
 let TILE_LAYER = null
 export function getTileLayer(url, ol = null) {

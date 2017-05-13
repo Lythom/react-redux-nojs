@@ -347,10 +347,17 @@ npm install --save-dev cookie-parser
   * Calculate the difference between now and the starttime to display counter.
   * The startime is created with the session initialisation and is not updated then.
 
-### server side openstreetmap and google-map
+### server side openstreetmap (or google-map)
 
-http://openlayers.org/en/latest/doc/quickstart.html
-umap.openstreetmap.fr/fr/map/mes-lieux-preferes-sur-nantes_143683
+* Add a map reducer to track filter and currentSelection
+* Data
+  * Download data from http://umap.openstreetmap.fr in server assets
+  * create a withData HOC to inject static json in components
+* Map components
+  * MapPage for navigation and openLayer 3 dynamic fetching and injection
+  * MyMap to assemble Filter / Map / List componants
+  * OLMap to wrap the OpenLayer plugin and display popup
+  * 
 
 ### server side form
 

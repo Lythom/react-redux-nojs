@@ -13,12 +13,17 @@ import OLMap from 'app/components/pages/map/OLMap'
 import withData from 'app/components/hoc/withData'
 import { getFilteredFeatures } from 'app/components/pages/map/shared'
 import * as map from 'app/reducers/map'
+import SelectionPopup from 'app/components/pages/map/SelectionPopup'
 
 class MyMap extends React.PureComponent {
 
   constructor() {
     super()
+    this.state = {
+      popupContainer : null
+    }
     this.setFilter = this.setFilter.bind(this)
+    this.registerPopupContainer = this.registerPopupContainer.bind(this)
   }
 
   setFilter(e) {
@@ -30,6 +35,12 @@ class MyMap extends React.PureComponent {
     else {
       this.props.setSelectedFeature(null)
     }
+  }
+
+  registerPopupContainer(container) {
+    this.setState({
+      popupContainer : container
+    })
   }
 
   render() {
@@ -52,12 +63,20 @@ class MyMap extends React.PureComponent {
         </label>
       </div>
 
-      <OLMap className="d-ib col-9 h-24 maw-100p" umapData={umapData} filter={this.props.filter} ol={this.props.ol} setFeature={this.props.setSelectedFeature} />
+      <div className="pos-r d-ib col-9 maw-100p">
+        <OLMap className="h-24"
+               umapData={umapData}
+               filter={this.props.filter}
+               ol={this.props.ol}
+               popupContainer={this.state.popupContainer}
+               setFeature={this.props.setSelectedFeature}/>
+        <SelectionPopup layers={umapData == null ? null : umapData.layers} registerPopupContainer={this.registerPopupContainer}/>
+      </div>
 
       <div className="d-ib col-3 h-5 va-t ta-l p-1">
         <div>
           <span className="h-2">Listes :</span>
-          <MapList layers={umapData == null ? null : umapData.layers} filter={this.props.filter} setFeature={this.props.setSelectedFeature} />
+          <MapList layers={umapData == null ? null : umapData.layers} filter={this.props.filter} setFeature={this.props.setSelectedFeature}/>
         </div>
       </div>
       <div>{content}</div>
@@ -76,8 +95,8 @@ function mapStateToProps(state) {
 }
 function mapDispatchToProps(dispatch) {
   return bindActionCreators({
-    setFilter : map.actions.setFilter,
-    setSelectedFeature: map.actions.setSelectedFeature,
+    setFilter          : map.actions.setFilter,
+    setSelectedFeature : map.actions.setSelectedFeature,
   }, dispatch)
 }
 

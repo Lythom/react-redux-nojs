@@ -26,7 +26,6 @@ class OLMap extends React.PureComponent {
       selection    : null,
     }
     this.setMapContainer = this.setMapContainer.bind(this)
-    this.setPopupContainer = this.setPopupContainer.bind(this)
     this.updateMap = debounce(this.updateMap.bind(this), 250)
     this.selectFeature = this.selectFeature.bind(this)
   }
@@ -35,8 +34,7 @@ class OLMap extends React.PureComponent {
     if (prevProps.umapData !== this.props.umapData
       || prevProps.filter !== this.props.filter
       || prevProps.ol !== this.props.ol
-      || prevState.mapContainer !== this.state.mapContainer
-      || prevState.popupContainer !== this.state.popupContainer) {
+      || prevState.mapContainer !== this.state.mapContainer) {
       this.updateMap()
     }
 
@@ -56,39 +54,41 @@ class OLMap extends React.PureComponent {
       selection : properties
     }, () => {
       if (this.state.selection === null) return
-      const overlay = this.state.map.getOverlays().getArray()[0]
       const view = this.state.map.getView()
       if (this.state.selection != null) {
         const coords = ol.proj.fromLonLat(feature.geometry.coordinates)
-        overlay.setPosition(coords)
         view.animate({ center : coords, duration : 150, zoom : view.getZoom() })
+
+        const overlay = this.state.map.getOverlays().getArray()[0]
+        if (overlay != null) {
+          overlay.setPosition(coords)
+        }
       }
-      this.setState({ popupHeight : this.state.popupContainer.offsetHeight + 20 })
     })
   }
 
   updateMap() {
-    const { mapContainer, popupContainer } = this.state
-    const { umapData, ol } = this.props
+    const { mapContainer } = this.state
+    const { umapData, ol, popupContainer } = this.props
 
-    if (mapContainer === null || umapData === null || ol === null || popupContainer === null) return
+    if (mapContainer === null || umapData === null || ol === null) return
 
     try {
 
       let map = this.state.map
-      if (this.state.map === null) {
-
-        const overlay = new ol.Overlay(({
-          element : popupContainer,
-        }));
+      if (this.state.map !== null) {} else {
 
         const mapOptions = {
-          target   : mapContainer,
-          overlays : [overlay],
-          view     : new ol.View({
+          target : mapContainer,
+          view   : new ol.View({
             center : ol.proj.fromLonLat(umapData.geometry.coordinates),
             zoom   : umapData.properties.zoom
           })
+        }
+        if (popupContainer != null) {
+          mapOptions.overlays = [new ol.Overlay(({
+            element : popupContainer,
+          }))]
         }
 
         map = new ol.Map(mapOptions);
@@ -136,40 +136,23 @@ class OLMap extends React.PureComponent {
     }
   }
 
-  setPopupContainer(container) {
-    this.setState({
-      popupContainer : container
-    })
-  }
-
   render() {
 
     let content = null
     const { umapData } = this.props
 
-    return <div className={'pos-r ' + this.props.className}>
-      <div className="h-24" ref={this.setMapContainer}><img className={`pos-a ${this.state.mapContainer ? 'op-03' : ''} l-0 t-0`} src="assets/mapPlaceholder.png" height="auto"/>
+    return (
+      <div className={this.props.className} ref={this.setMapContainer}>
+        <img className={`pos-a ${this.state.mapContainer ? 'op-03' : ''} l-0 t-0`} src="assets/mapPlaceholder.png" height="auto"/>
       </div>
-      <div className="pos-a bgc-1 p-1 bd-2" ref={this.setPopupContainer}
-           style={{
-             display     : this.state.selection != null ? 'block' : 'none',
-             left        : `calc(50% - 160px)`,
-             top         : this.state.popupHeight ? -this.state.popupHeight - 22 : null,
-             bottom      : this.state.popupHeight ? null : `calc(50% - 22px)`,
-             width       : 320,
-             borderColor : this.state.selection ? this.state.selection.color : null
-           }}>
-        <strong>{this.state.selection && this.state.selection.name}</strong>
-        <div>{this.state.selection && this.state.selection.description}</div>
-      </div>
-    </div>
+    )
   }
 }
 
 
 function mapStateToProps(state) {
   return {
-    filter             : map.selectors.getFilter(state.map),
+    filter          : map.selectors.getFilter(state.map),
     selectedFeature : map.selectors.getSelectedFeature(state.map),
   }
 }
