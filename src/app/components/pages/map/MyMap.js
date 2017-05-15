@@ -14,6 +14,7 @@ import withData from 'app/components/hoc/withData'
 import { getFilteredFeatures } from 'app/components/pages/map/umapDataSelectors'
 import * as map from 'app/reducers/map'
 import SelectionPopup from 'app/components/pages/map/SelectionPopup'
+import { dataURL } from 'app/constants'
 
 class MyMap extends React.PureComponent {
 
@@ -57,10 +58,13 @@ class MyMap extends React.PureComponent {
     }
     return <div className="ta-c">
       <div className="ta-c m-1">
-        <label htmlFor="filter">
-          <span>Rechercher :</span>
-          <input id="filter" value={this.props.filter} onChange={this.setFilter}/>
-        </label>
+        <form method="GET" action="">
+          <label htmlFor="filter">
+            <span>Search :</span>
+            <input id="filter" name="filter" value={this.props.filter} onChange={this.setFilter}/>
+          </label>
+          {this.props.hasServerInteractions && <button type="submit">Find !</button>}
+        </form>
       </div>
 
       <div className="pos-r d-ib col-9 maw-100p">
@@ -100,4 +104,4 @@ function mapDispatchToProps(dispatch) {
   }, dispatch)
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(withData('/assets/map.umap')(MyMap))
+export default connect(mapStateToProps, mapDispatchToProps)(withData(dataURL.umapData)(MyMap))

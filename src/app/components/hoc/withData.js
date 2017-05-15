@@ -1,6 +1,19 @@
 import React from 'react'
+import getAbsoluteURL from 'app/helpers/getAbsoluteURL'
 
-const cachedData = {}
+export const cachedData = typeof(window) !== 'undefined' ? window.__CACHED_DATA__ : {}
+
+export function loadJsonData(key, url) {
+  return fetch(url)
+    .then(response => response.json())
+    .then(json => {
+      cachedData[key] = json
+      return json
+    })
+    .catch(err => {
+      console.error(err)
+    })
+}
 
 export default dataSource => WrappedComponent => {
   const WrappedWithData = class withData extends React.PureComponent {
@@ -14,17 +27,11 @@ export default dataSource => WrappedComponent => {
 
     componentDidMount() {
       if (this.state.data === undefined) {
-        fetch(dataSource)
-          .then(response => response.json())
-          .then(json => {
-            cachedData[dataSource] = json
-            this.setState({
-              data : json
-            })
+        loadJsonData(dataSource, getAbsoluteURL(dataSource, document)).then(json => {
+          this.setState({
+            data : json
           })
-          .catch(err => {
-            console.error(err)
-          })
+        })
       }
     }
 
