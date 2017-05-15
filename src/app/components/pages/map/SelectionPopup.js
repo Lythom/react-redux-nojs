@@ -24,7 +24,7 @@ class SelectionPopup extends React.PureComponent {
   }
 
   updateHeight() {
-    if (this.state.popupContainer) this.setState({ popupHeight : this.state.popupContainer.offsetHeight + 20 })
+    if (this.state.popupContainer) setTimeout(() => this.setState({ popupHeight : this.state.popupContainer.offsetHeight + 20 }), 0)
   }
 
   setPopupContainer(container) {
@@ -57,9 +57,9 @@ class SelectionPopup extends React.PureComponent {
 }
 
 
-function mapStateToProps(state) {
+function mapStateToProps(state, ownProps) {
   return {
-    selectedFeature : map.selectors.getSelectedFeature(state.map),
+    selectedFeature : map.selectors.getSelectedFeature(state.map, ownProps.layers),
   }
 }
 

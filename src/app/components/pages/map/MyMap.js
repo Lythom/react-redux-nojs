@@ -73,7 +73,8 @@ class MyMap extends React.PureComponent {
                filter={this.props.filter}
                ol={this.props.ol}
                popupContainer={this.state.popupContainer}
-               setFeature={this.props.setSelectedFeature}/>
+               setFeature={this.props.setSelectedFeature}
+               hasServerInteractions/>
         <SelectionPopup layers={umapData == null ? null : umapData.layers} registerPopupContainer={this.registerPopupContainer}/>
       </div>
 

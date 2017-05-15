@@ -17,10 +17,15 @@ export default ({ layers, filter, setFeature }) => {
             <ul className="list-unstyled fs-small">
               {features.map(feature => (
                 <li key={feature.properties.name}>
-                  <button className="btn ta-l p-1" onClick={e => setFeature(feature.properties.name)}>
-                    {feature.properties.name}<br/>
-                    {feature.properties.street} - {feature.properties.city}
-                  </button>
+                  <form method="GET" action="">
+                    <button type="submit" name="filter" value={feature.properties.name} className="btn ta-l p-1" onClick={e => {
+                      e.preventDefault();
+                      setFeature(feature.properties.name)
+                    }}>
+                      {feature.properties.name}<br/>
+                      {feature.properties.street} - {feature.properties.city}
+                    </button>
+                  </form>
                 </li>
               ))}
             </ul>

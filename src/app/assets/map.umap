@@ -108,7 +108,7 @@
         "remoteData": {},
         "description": "La liste des restaurants que j'aime fréquenter",
         "iconUrl": "/uploads/pictogram/fast-food-24_1.png",
-        "color": "DarkRed"
+        "color": "#8b0000"
       }
     },
     {
@@ -194,7 +194,7 @@
         "description": "Là où j'aime boire et discuter. Si l'un de ces lieux est mentionné je ne peux pas refuser l'invitation.",
         "id": 351260,
         "iconUrl": "/uploads/pictogram/bar-24_1.png",
-        "color": "OrangeRed"
+        "color": "#ff4500"
       }
     },
     {
@@ -334,7 +334,7 @@
         "name": "Travail",
         "description": "Les endroits où j'ai travaillé dans Nantes",
         "id": 351261,
-        "color": "MidnightBlue",
+        "color": "#191970",
         "iconUrl": "/uploads/pictogram/commercial-24_1.png"
       }
     }

@@ -1,3 +1,4 @@
+import { getFilteredFeatures } from 'app/components/pages/map/umapDataSelectors'
 const initialState = {
   filter: '',
   selectedFeature: null,
@@ -29,7 +30,12 @@ export const selectors = {
   getFilter(state) {
     return state.filter
   },
-  getSelectedFeature(state) {
-    return state.selectedFeature
+  getSelectedFeature(state, layers = null) {
+    if (state.selectedFeature || layers === null) return state.selectedFeature
+      const features = getFilteredFeatures(layers, state.filter)
+      if (features.length === 1) {
+        return features[0].properties.name
+      }
+      return null
   },
 }
