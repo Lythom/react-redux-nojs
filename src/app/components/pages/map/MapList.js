@@ -22,7 +22,7 @@ export default ({ layers, filter, setFeature }) => {
                       e.preventDefault();
                       setFeature(feature.properties.name)
                     }}>
-                      {feature.properties.name}<br/>
+                      <strong>{feature.properties.name}</strong><br/>
                       {feature.properties.street} - {feature.properties.city}
                     </button>
                   </form>
