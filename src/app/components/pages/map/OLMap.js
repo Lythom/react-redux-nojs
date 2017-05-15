@@ -1,16 +1,6 @@
 /**
  * Encapsulate the OpenLayer map plugin.
- */
-import React from 'react'
-import { getLayersFromLayersData, getTileLayer } from 'app/components/pages/map/olHelpers'
-import { getFeatureByName, getFeatureColor, getFilteredFeatures } from 'app/components/pages/map/umapDataSelectors'
-import debounce from 'app/helpers/debounce'
-import * as map from 'app/reducers/map'
-import { connect } from 'react-redux'
-const geojsonExtent = require('geojson-extent')
-const geoViewport = require('@mapbox/geo-viewport')
-
-/**
+ *
  * Props :
  * registerSelectFeature
  * umapData data to display in the map
@@ -18,6 +8,15 @@ const geoViewport = require('@mapbox/geo-viewport')
  * setFeature to set a selected feature
  * ol       openlayer lib
  */
+import React from 'react'
+import { getLayersFromLayersData, getTileLayer } from 'app/components/pages/map/olHelpers'
+import { getFeatureByName, getFeatureColor, getFilteredFeatures } from 'app/components/pages/map/umapDataSelectors'
+import debounce from 'app/helpers/debounce'
+import * as map from 'app/reducers/map'
+import { connect } from 'react-redux'
+
+import generateStaticMapURL from 'server/generateStaticMapURL'
+
 class OLMap extends React.PureComponent {
 
   constructor() {
@@ -146,21 +145,8 @@ class OLMap extends React.PureComponent {
     const { umapData, filter, hasServerInteractions } = this.props
 
     let mapURL = 'assets/mapPlaceholder.png'
-    if (hasServerInteractions && filter !== '') {
-      // move token server side (and libs geojsonExtent and geoViewport as well)
-      const token = 'pk.eyJ1IjoibHl0aG9tIiwiYSI6ImNqMmhpcWVnZzAwMWcycm12Y3BuejZvbmgifQ.SQ9hbbYWNplFR0CzAaz79g'
-      const size = [720, 576]
-      const features = getFilteredFeatures(umapData.layers, filter)
-      const bounds = geojsonExtent({
-        "type" : "FeatureCollection",
-        features
-      })
-      const viewport = geoViewport.viewport(bounds, size)
-      const zoom = features.length === 1 ? 16 : viewport.zoom - 1
-      const pins = features.map(f => (
-        `pin-s+${getFeatureColor(umapData.layers, f.properties.name).substring(1)}(${f.geometry.coordinates.join(',')})`
-      ))
-      mapURL = `https://api.mapbox.com/styles/v1/mapbox/streets-v10/static/${pins.join(',')}/${viewport.center.join(',')},${zoom}/${size.join('x')}?access_token=${token}`
+    if (generateStaticMapURL && filter !== '') {
+      mapURL = generateStaticMapURL(umapData.layers, filter)
     }
 
     return (

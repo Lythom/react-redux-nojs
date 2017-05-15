@@ -52,19 +52,19 @@ class MyMap extends React.PureComponent {
     if (this.props.hasStaticInteractions) {
       content = 'Static image from the server (TODO)'
     } else if (this.props.hasServerInteractions || this.mapContainer === null) {
-      content = 'Dynamic image from the server (TODO)'
+      content = 'Dynamic image from the server'
     } else {
       content = 'Dynamic map clientside'
     }
     return <div className="ta-c">
       <div className="ta-c m-1">
-        <form method="GET" action="">
+        {!this.props.hasStaticInteractions && <form method="GET" action="">
           <label htmlFor="filter">
             <span>Search :</span>
             <input id="filter" name="filter" value={this.props.filter} onChange={this.setFilter}/>
           </label>
           {this.props.hasServerInteractions && <button type="submit">Find !</button>}
-        </form>
+        </form>}
       </div>
 
       <div className="pos-r d-ib col-9 maw-100p">
@@ -74,8 +74,9 @@ class MyMap extends React.PureComponent {
                ol={this.props.ol}
                popupContainer={this.state.popupContainer}
                setFeature={this.props.setSelectedFeature}
-               hasServerInteractions/>
+               />
         <SelectionPopup layers={umapData == null ? null : umapData.layers} registerPopupContainer={this.registerPopupContainer}/>
+        <small>{content}</small>
       </div>
 
       <div className="d-ib col-3 h-5 va-t ta-l p-1">
@@ -84,7 +85,6 @@ class MyMap extends React.PureComponent {
           <MapList layers={umapData == null ? null : umapData.layers} filter={this.props.filter} setFeature={this.props.setSelectedFeature}/>
         </div>
       </div>
-      <div>{content}</div>
     </div>
 
   }

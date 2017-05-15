@@ -2,7 +2,10 @@ const path = require('path');
 
 module.exports = {
   resolve : {
-    modules : [path.resolve(__dirname, "src"), "node_modules"]
+    modules : [path.resolve(__dirname, "src"), "node_modules"],
+    alias: {
+      'server/generateStaticMapURL': 'app/helpers/null'
+    }
   },
   entry   : [
     'client/index.js',
