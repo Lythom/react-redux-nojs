@@ -16,6 +16,7 @@ import * as map from 'app/reducers/map'
 import { connect } from 'react-redux'
 
 import generateStaticMapURL from 'server/generateStaticMapURL'
+import * as interactions from 'app/reducers/interactions'
 
 class OLMap extends React.PureComponent {
 
@@ -151,7 +152,7 @@ class OLMap extends React.PureComponent {
 
     return (
       <div className={this.props.className} ref={this.setMapContainer}>
-        <img className={`pos-a ${this.state.mapContainer ? 'op-03' : ''} l-0 t-0`} src={mapURL} height="auto"/>
+        <img className={`pos-a ${this.state.mapContainer && this.props.isDynamic ? 'op-03' : ''} l-0 t-0`} src={mapURL} height="auto"/>
       </div>
     )
   }
@@ -162,6 +163,7 @@ function mapStateToProps(state, ownProps) {
   return {
     filter          : map.selectors.getFilter(state.map),
     selectedFeature : ownProps.umapData != null ? map.selectors.getSelectedFeature(state.map, ownProps.umapData.layers) : null,
+    isDynamic       : interactions.selectors.isDynamic(state.interactions)
   }
 }
 

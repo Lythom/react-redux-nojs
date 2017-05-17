@@ -10,6 +10,7 @@ const Layout = ({children}) => (
       <MenuItem to="/index.html">Home</MenuItem>
       <MenuItem to="/demo.html">Demo Counter</MenuItem>
       <MenuItem to="/map.html">My favorite places</MenuItem>
+      <button onClick={() => {setTimeout(() => { throw new Error('App just crashed, too bad !')}, 0)}}>Ooops !</button>
     </Menu>
     <hr />
     {children}

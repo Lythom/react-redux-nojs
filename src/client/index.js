@@ -6,6 +6,7 @@ import createBrowserHistory from 'history/createBrowserHistory'
 import { Provider } from 'react-redux'
 import App from 'app/App'
 import createInitialStore from 'app/createInitialStore'
+import * as interactions from 'app/reducers/interactions'
 
 const rootNode = document.getElementById('root')
 
@@ -30,6 +31,23 @@ const render = (Component) => {
 }
 
 render(App)
+
+window.onerror = function(errorMsg, url, lineNumber, column, errorObj) {
+  if (errorMsg.indexOf('Uncaught Error') > -1) {
+    try {
+      store.dispatch(interactions.actions.set(preloadedState.interactions))
+    } catch(e) {
+      console.error('Could not revert app to server interactions state', e)
+    }
+    try {
+      const html = rootNode.innerHTML
+      ReactDOM.unmountComponentAtNode(rootNode)
+      rootNode.innerHTML = html
+    } catch(e) {
+      console.error('Could not unmount React', e)
+    }
+  }
+}
 
 if (module.hot) {
   module.hot.accept('app/App', () => {
