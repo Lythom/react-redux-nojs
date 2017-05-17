@@ -41,7 +41,7 @@ class OLMap extends React.PureComponent {
       || prevState.mapContainer !== this.state.mapContainer) {
       this.updateMap()
     }
-    if (prevProps.selectedFeature !== this.props.selectedFeature || !this.initialized) {
+    if (this.props.umapData && (prevProps.selectedFeature !== this.props.selectedFeature || !this.initialized)) {
       this.selectFeature(getFeatureByName(this.props.umapData.layers, this.props.selectedFeature))
       this.initialized = (this.state.map != null)
     }
