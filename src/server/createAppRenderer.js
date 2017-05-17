@@ -1,15 +1,21 @@
 import React from 'react'
 import ReactDOMServer from 'react-dom/server'
 import { Helmet } from 'react-helmet'
-
-// app imports
 import { Provider } from 'react-redux'
 import { StaticRouter } from 'react-router'
 import App from 'app/App'
 
+/**
+ * return a function ready to render the app into as html in a string
+ * @param url         URL to render
+ * @param store       redux store to inject in react
+ * @param context     out - react-router will indicate routing decisions taken by the app in this object
+ * @param cachedData  data from web services to inject synchronously into the app
+ */
 export default (url, store = undefined, context = {}, cachedData) => function render() {
   const title = 'First title'
   const context = {}
+
   const prerenderedApp = ReactDOMServer.renderToString(
     <Provider store={store}>
       <StaticRouter location={url} context={context}>

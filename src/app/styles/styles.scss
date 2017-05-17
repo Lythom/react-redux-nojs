@@ -33,6 +33,10 @@ $backColor-1: #f8f7f3;
   border-radius: 4px;
 }
 
+*:focus .d-b\:parent-focus {
+  display: block;
+}
+
 // styles
 
 .bd-2 {
@@ -43,9 +47,16 @@ $backColor-1: #f8f7f3;
   background-color: $backColor-1;
 }
 
+.d-b {
+  display: block;
+}
 .d-ib {
   display: inline-block;
 }
+.d-n {
+  display: none;
+}
+
 
 .fl-l {
   float: left;
@@ -60,6 +71,10 @@ $backColor-1: #f8f7f3;
   &:last-child {
     margin-right: 0;
   }
+}
+
+.v-h {
+  visibility: hidden;
 }
 
 .l-0 {
@@ -90,7 +105,10 @@ $backColor-1: #f8f7f3;
 }
 
 .p-1 {
-  padding: $h-spacing;
+  padding: $v-spacing $h-spacing;
+}
+.pt-1 {
+  padding-top: $v-spacing;
 }
 
 .pos-a {

@@ -19,12 +19,17 @@ module.exports = {
   plugins : [
     new StaticSiteGeneratorPlugin({
       entry : 'static',
-      crawl : true,
+      paths: [
+        '/index.html',
+        '/demo.html',
+        '/map.html',
+      ],
     })
   ],
   module  : {
     loaders : [
       { test : /\.js$/, loader : ['babel-loader'], include : path.join(__dirname, 'src') },
+      { test : /\.umap$/, loader : ['json-loader'], include : path.join(__dirname, 'src') },
     ]
   }
 }

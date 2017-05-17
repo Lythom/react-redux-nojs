@@ -15,7 +15,9 @@
     "build-static": "npm-run-all build-static:*",
     "build-static:css": "node-sass src/app/styles/ -o dist-static/assets",
     "build-static:cssvendors": "node-sass node_modules/normalize.css/normalize.css -o dist-static/assets",
-    "build-static:copyassets": "shx cp src/app/assets/* dist-static/",
+    "build-static:copyassets": "npm-run-all build-static:copyassets:*",
+    "build-static:copyassets:favico": "shx cp src/app/assets/favicon.ico dist-static/",
+    "build-static:copyassets:assets": "shx cp -R src/app/assets/* dist-static/assets/",
     "build-static:bundle": "webpack --config webpack.static.config.js",
     "debug:start": "cross-env NODE_ENV=development NODE_PATH=src/ node %NODE_DEBUG_OPTION% src/server/index.js"
   },
