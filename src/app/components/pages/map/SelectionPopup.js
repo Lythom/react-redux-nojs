@@ -2,35 +2,16 @@ import React from 'react'
 import { getFeatureByName, getFeatureColor } from 'app/components/pages/map/umapDataSelectors'
 import * as map from 'app/reducers/map'
 import { connect } from 'react-redux'
+import * as interactions from 'app/reducers/interactions'
 
 class SelectionPopup extends React.PureComponent {
 
   constructor() {
     super()
-
-    this.state = {
-      popupContainer : null,
-      popupHeight    : null,
-    }
     this.setPopupContainer = this.setPopupContainer.bind(this)
   }
 
-  componentDidMount() {
-    this.updateHeight()
-  }
-
-  componentDidUpdate(prevProps, prevState) {
-    this.updateHeight()
-  }
-
-  updateHeight() {
-    if (this.state.popupContainer) setTimeout(() => this.setState({ popupHeight : this.state.popupContainer.offsetHeight + 20 }), 0)
-  }
-
   setPopupContainer(container) {
-    this.setState({
-      popupContainer : container
-    })
     if (this.props.registerPopupContainer) this.props.registerPopupContainer(container)
   }
 
@@ -44,8 +25,7 @@ class SelectionPopup extends React.PureComponent {
            style={{
              display     : selection != null ? 'block' : 'none',
              left        : `calc(50% - 160px)`,
-             top         : this.state.popupHeight != null ? -this.state.popupHeight - 22 : null,
-             bottom      : this.state.popupHeight != null ? null : `calc(50% + 44px)`,
+             bottom      : this.props.isDynamic ? 42 : `calc(50% + 44px)`,
              width       : 320,
              borderColor : color
            }}>
@@ -60,6 +40,7 @@ class SelectionPopup extends React.PureComponent {
 function mapStateToProps(state, ownProps) {
   return {
     selectedFeature : map.selectors.getSelectedFeature(state.map, ownProps.layers),
+    isDynamic: interactions.selectors.isDynamic(state.interactions),
   }
 }
 

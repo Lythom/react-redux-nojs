@@ -142,8 +142,7 @@ class OLMap extends React.PureComponent {
 
   render() {
 
-    let content = null
-    const { umapData, filter, hasServerInteractions } = this.props
+    const { umapData, filter } = this.props
 
     let mapURL = 'assets/mapPlaceholder.png'
     if (generateStaticMapURL && filter !== '') {
