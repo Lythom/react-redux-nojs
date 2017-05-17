@@ -33,7 +33,7 @@ const render = (Component) => {
 render(App)
 
 window.onerror = function(errorMsg, url, lineNumber, column, errorObj) {
-  if (errorMsg.indexOf('Uncaught Error') > -1) {
+  if (errorMsg.indexOf('Uncaught') > -1) {
     try {
       store.dispatch(interactions.actions.set(preloadedState.interactions))
     } catch(e) {
