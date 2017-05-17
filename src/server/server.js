@@ -56,7 +56,9 @@ app.get('*', function(req, res) {
       store.dispatch(interactions.actions.setServer())
 
       // if the user asked a filter, hydrate the state with this value
-      store.dispatch(map.actions.setFilter(req.query.filter || ''))
+      let filter = req.query.filter
+      if (filter == null || Array.isArray(filter)) filter = ''
+      store.dispatch(map.actions.setFilter(filter))
 
       // depending on the page, we want to inject some data
       const dataPromises = []

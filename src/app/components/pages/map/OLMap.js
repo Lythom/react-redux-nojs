@@ -161,7 +161,7 @@ class OLMap extends React.PureComponent {
 function mapStateToProps(state, ownProps) {
   return {
     filter          : map.selectors.getFilter(state.map),
-    selectedFeature : map.selectors.getSelectedFeature(state.map, ownProps.umapData.layers),
+    selectedFeature : ownProps.umapData != null ? map.selectors.getSelectedFeature(state.map, ownProps.umapData.layers) : null,
   }
 }
 

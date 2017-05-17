@@ -58,13 +58,20 @@ class MyMap extends React.PureComponent {
     }
     return <div className="ta-c">
       <div className="ta-c m-1">
-        {!this.props.hasStaticInteractions && <form method="GET" action="">
-          <label htmlFor="filter">
-            <span>Search :</span>
-            <input id="filter" name="filter" value={this.props.filter} onChange={this.setFilter}/>
-          </label>
-          {this.props.hasServerInteractions && <button type="submit">Find !</button>}
-        </form>}
+        {!this.props.hasStaticInteractions && <div>
+          <form method="GET" action="" className="d-ib">
+            <label htmlFor="filter">
+              <span>Search :</span>
+              <input id="filter" name="filter" value={this.props.filter} onChange={this.setFilter}/>
+            </label>
+            {this.props.hasServerInteractions && <button type="submit">Find !</button>}
+          </form>
+          {this.props.hasServerInteractions && (
+            <form method="GET" action="" className="d-ib">
+              <button type="submit" name="filter" value="">Reset</button>
+            </form>
+          )}
+        </div>}
       </div>
 
       <div className="pos-r d-ib col-9 maw-100p">
@@ -74,7 +81,7 @@ class MyMap extends React.PureComponent {
                ol={this.props.ol}
                popupContainer={this.state.popupContainer}
                setFeature={this.props.setSelectedFeature}
-               />
+        />
         <SelectionPopup layers={umapData == null ? null : umapData.layers} registerPopupContainer={this.registerPopupContainer}/>
         <small>{content}</small>
       </div>
@@ -82,7 +89,11 @@ class MyMap extends React.PureComponent {
       <div className="d-ib col-3 h-5 va-t ta-l p-1">
         <div>
           <span className="h-2">Listes :</span>
-          <MapList layers={umapData == null ? null : umapData.layers} filter={this.props.filter} setFeature={this.props.setSelectedFeature}/>
+          <MapList
+            layers={umapData == null ? null : umapData.layers}
+            filter={this.props.filter}
+            setFeature={this.props.setSelectedFeature}
+            isStatic={this.props.hasStaticInteractions}/>
         </div>
       </div>
     </div>
