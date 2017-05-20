@@ -9,11 +9,17 @@ See the related talk for mor details : https://github.com/Lythom/talk-no-js-with
 ## Objectives
 
 ☑ Client side rich webapp
+
 ☑ Dynamic Server side rendering that handles user interactions
+
 ☑ Static server side rendering
+
 ☑ Bleeding edge dev experience (hot reload, import ressources as modules, ES6, JSX)
+
 ☐ ESLint
+
 ☐ Tests
+
 ☐ Build tools as a dependency
 
 ## 1. The most basic SSR
