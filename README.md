@@ -1,52 +1,20 @@
 # react-redux-nojs
 
-## Why you need universal app (Server side rendering)
+## The architecture
 
-Universal ? Execute the same js in different environments :
-* On any js compatible client browser
-* In any nodejs script
-  * Ex: On a dynamic server
-  * Ex: In a static generation script
-* In any test suite
+<img src="https://cdn.rawgit.com/Lythom/talk-no-js-with-react-redux/d913a673/architecture.svg" style="width: 100%;height: auto;" />
 
-### Usually mentionned
+See the related talk for mor details : https://github.com/Lythom/talk-no-js-with-react-redux
 
-* SEO
-* Performances (initial display earlier because the page arrive prerendered)
+## Objectives
 
-### Why you really want it
-
-* Inclusiveness
-  * Older browers (ie6, ie7, ie8, olders android, windows phones)
-  * People that disable js on purpose
-  * Accessibility
-  * Robots that can perform actions for people (assistance, delegated use, tests)
-* Resilience
-  * Support server overload / fails by serving a static prerendered (from CDN, ngix, etc.)
-  * Support client fail (inclusiveness, client app js error)
-  * Both fails = still a static page that indicate that interactions are currently unavailable.
-  * Best experience is top-notch
-  * Worst experience is decent
-
-## Objectives :
-
-* Build chain as a dependency
-* Server side rendering
-* Bleeding edge dev experience (hot reload, eslint, tests, import ressources as modules, ES6, JSX)
-* "Full" SSR
-
-## Tried
-
-"create-reat-app"
-* => no SSR, hacky to add
-
-"nwb"
-* => no SSR, hacky to add
-
-"kyt"
-* => ok for an universal starter
-* /!\ Too much magic = lost of control
-
+☑ Client side rich webapp
+☑ Dynamic Server side rendering that handles user interactions
+☑ Static server side rendering
+☑ Bleeding edge dev experience (hot reload, import ressources as modules, ES6, JSX)
+☐ ESLint
+☐ Tests
+☐ Build tools as a dependency
 
 ## 1. The most basic SSR
 
@@ -60,7 +28,7 @@ npm install --save-dev express
 
 ### Setup the project
 
-> @f9d03ab - Setup the most basic server-side rendering
+> Setup the most basic server-side rendering
 
 * src/server.js
 * src/client/index.js
@@ -68,7 +36,7 @@ npm install --save-dev express
 
 ## 2. Put in some React
 
-> @c1b00c4 - Introduce React clientside + serverside. But module import fails client side !
+> Introduce React clientside + serverside. But module import fails client side !
 
 ```
 npm install --save react react-dom
@@ -85,7 +53,7 @@ npm view react-router version
 
 ## 3. Webpack
 
-> @fffe018 - Introduce Webpack for client js bundling
+> Introduce Webpack for client js bundling
 
 ### install webpack for packaging
 ```
@@ -104,20 +72,20 @@ npm install --save-dev babel-loader babel-core babel-preset-es2015 babel-preset-
 * Change server to point to the bundled js
 * Add build script
 
-Now the client side is ok.
-But can't use jsx or fancy es6 syntax server-side : node doesn't know "import" or "jsx" syntax.
-
-Solution ? use babel server-side as well.
-
 ```
 npm run build
 npm start
 ```
 
+Now the client side is ok.
+But can't use jsx or fancy es6 syntax server-side : node doesn't know "import" or "jsx" syntax.
+
+Solution ? use babel server-side as well.
+
 ## 4. Server transpilling + Hot reload
 
-> @1ecc4e7 - Add server transpilling (via babel-core/register), Hot Module Replacement and React Hot Loader. Discriminate dev and prod environments.
-> @882003e - Move server.js and cleanup
+> Add server transpilling (via babel-core/register), Hot Module Replacement and React Hot Loader. Discriminate dev and prod environments.
+> Move server.js and cleanup
 
 ### Add server transpilling
 
@@ -227,7 +195,7 @@ if (module.hot) {
 
 ## 5. Routing
 
-> @3f688fb - Routing with react-router 4
+> Routing with react-router 4
 
 ```
 npm install --save react-router react-router-dom
@@ -239,7 +207,7 @@ npm install --save react-router react-router-dom
 
 ## 6. Redux
 
-> @7d43dde - Add basic redux to track state
+> Add basic redux to track state
 
 ```
 npm install --save redux react-redux
@@ -296,7 +264,7 @@ So ?
 
 ### Finally
 
-> @04342a6 - Keep going with style
+> Keep going with style
 
 * Split React component to separate "styled" components and "app specific" components
 * Use normalize.css
@@ -308,7 +276,7 @@ So ?
 
 This will allow server failure resilience, by serving an alternative static only version.
 
-> @008e2e3 - Add static html files generation
+> Add static html files generation
 
 ```npm i -- save-dev static-site-generator-webpack-plugin http-server```
 
@@ -361,8 +329,3 @@ npm install --save-dev cookie-parser
   * SelectionPopup to display a popup statically or dynamically
 * Utilities functions to work with the data
 
-### server side form
-
-### generic server-side redux handling
-
-## Redux
